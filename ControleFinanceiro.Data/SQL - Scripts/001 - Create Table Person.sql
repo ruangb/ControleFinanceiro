@@ -1,0 +1,4 @@
+CREATE TABLE ControleFinanceiro..Person 
+(Id INT NOT NULL PRIMARY KEY IDENTITY
+,[Name] NVARCHAR(50) NOT NULL
+,Inactive BIT NOT NULL)
