@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ControleFinanceiro.Data.Repository
+namespace ControleFinanceiro.Data.Interfaces
 {
-    internal interface IGenericRepository<T> where T : class
+    internal interface IBaseRepository<T> where T : class
     {
         IEnumerable<T> GetAll();
         T GetById(int id);

@@ -1,4 +1,6 @@
 ﻿using ControleFinanceiro.Data.Context;
+using ControleFinanceiro.Data.Interfaces;
+using ControleFinanceiro.Domain;
 using Dapper;
 using System;
 using System.Collections.Generic;
@@ -7,9 +9,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ControleFinanceiro.Data.Repository
+namespace ControleFinanceiro.Data.Implementation
 {
-    internal class CreditCardRepository : IGenericRepository<CreditCard>
+    internal class CreditCardRepository : IBaseRepository<CreditCard>
     {
         private readonly IContext _context;
 
