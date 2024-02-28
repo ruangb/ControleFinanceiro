@@ -1,5 +1,7 @@
 ﻿using ControleFinanceiro.Application.Interfaces;
 using ControleFinanceiro.Domain;
+using ControleFinanceiro.Domain.Manager.Interfaces;
+using ControleFinanceiro.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,24 +10,31 @@ using System.Threading.Tasks;
 
 namespace ControleFinanceiro.Application.Implementation
 {
-    internal class CreditCardAppService : IBaseAppService<CreditCard>
+    public sealed class CreditCardAppService : IBaseAppService<CreditCard>
     {
-        public IEnumerable<CreditCard> GetAll()
+        private readonly IBaseManager<CreditCard> _baseManager;
+
+        public CreditCardAppService(IBaseManager<CreditCard> baseManager)
+        {
+            _baseManager = baseManager;
+        }
+
+        public  IEnumerable<CreditCard> GetAll()
+        {
+            return _baseManager.GetAll();
+        }
+
+        public  CreditCard GetById(int id)
         {
             throw new NotImplementedException();
         }
 
-        public CreditCard GetById(int id)
+        public  void Insert(CreditCard obj)
         {
             throw new NotImplementedException();
         }
 
-        public void Insert(CreditCard obj)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Update(CreditCard obj)
+        public  void Update(CreditCard obj)
         {
             throw new NotImplementedException();
         }

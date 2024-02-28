@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ControleFinanceiro.Data.Context
 {
-    internal interface IContext
+    public interface IContext
     {
         string? GetConnectionString();
     }

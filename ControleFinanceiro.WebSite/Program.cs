@@ -1,7 +1,21 @@
+using ControleFinanceiro.Application.Implementation;
+using ControleFinanceiro.Application.Interfaces;
+using ControleFinanceiro.Data.Context;
+using ControleFinanceiro.Data.Implementation;
+using ControleFinanceiro.Data.Interfaces;
+using ControleFinanceiro.Domain.Manager.Implementation;
+using ControleFinanceiro.Domain.Manager.Interfaces;
+using ControleFinanceiro.Models;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddSingleton<IContext, Context>();
+builder.Services.AddScoped<IBaseRepository<CreditCard>, CreditCardRepository>();
+builder.Services.AddScoped<IBaseManager<CreditCard>, CreditCardManager>();
+builder.Services.AddScoped<IBaseAppService<CreditCard>, CreditCardAppService>();
 
 var app = builder.Build();
 

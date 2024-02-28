@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace ControleFinanceiro.Domain
+namespace ControleFinanceiro.Models
 {
     [Table("CreditCard")]
     public class CreditCard

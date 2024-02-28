@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ControleFinanceiro.Data.Context
 {
-    internal class Context : IContext
+    public class Context : IContext
     {
         public IConfiguration Configuration { get; }
         public Context(IConfiguration configuration)
