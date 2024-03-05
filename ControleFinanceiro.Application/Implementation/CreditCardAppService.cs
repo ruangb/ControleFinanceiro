@@ -1,4 +1,6 @@
-﻿using ControleFinanceiro.Application.Interfaces;
+﻿using AutoMapper;
+using ControleFinanceiro.Application.Interfaces;
+using ControleFinanceiro.CrossCutting.DTO;
 using ControleFinanceiro.Domain;
 using ControleFinanceiro.Domain.Manager.Interfaces;
 using ControleFinanceiro.Models;
@@ -10,33 +12,45 @@ using System.Threading.Tasks;
 
 namespace ControleFinanceiro.Application.Implementation
 {
-    public sealed class CreditCardAppService : IBaseAppService<CreditCard>
+    public sealed class CreditCardAppService : IBaseAppService<CreditCardDTO>
     {
         private readonly IBaseManager<CreditCard> _baseManager;
+        private IMapper _mapper;
 
-        public CreditCardAppService(IBaseManager<CreditCard> baseManager)
+        public CreditCardAppService(IBaseManager<CreditCard> baseManager, IMapper mapper)
         {
             _baseManager = baseManager;
+            _mapper = mapper;
         }
 
-        public  IEnumerable<CreditCard> GetAll()
+        public IEnumerable<CreditCardDTO> GetAll()
         {
-            return _baseManager.GetAll();
+            CreateMap();
+
+            var creditCards = _mapper.Map<IEnumerable<CreditCardDTO>>(_baseManager.GetAll());
+
+            return creditCards;
         }
 
-        public  CreditCard GetById(int id)
+        public CreditCardDTO GetById(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Insert(CreditCardDTO obj)
         {
             throw new NotImplementedException();
         }
 
-        public  void Insert(CreditCard obj)
+        public void Update(CreditCardDTO obj)
         {
             throw new NotImplementedException();
         }
 
-        public  void Update(CreditCard obj)
+        private void CreateMap()
         {
-            throw new NotImplementedException();
+            var mapper = new MapperConfiguration(m => m.CreateMap<CreditCard, CreditCardDTO>().ReverseMap());
+            _mapper = mapper.CreateMapper();
         }
     }
 }
