@@ -3,7 +3,6 @@ using ControleFinanceiro.Data.Interfaces;
 using ControleFinanceiro.Models;
 using Dapper;
 using System.Data.SqlClient;
-using ControleFinanceiro.CrossCutting.Utilities;
 
 namespace ControleFinanceiro.Data.Implementation
 {
@@ -35,19 +34,16 @@ namespace ControleFinanceiro.Data.Implementation
 
         public void Insert(CreditCard entity)
         {
-            using (var db = new SqlConnection(_context.GetConnectionString()))
+            using (var conn = new SqlConnection(_context.GetConnectionString()))
             {
-                db.Open();
+                conn.Open();
 
-                Dictionary<string, object> entityKeyValues = GetEntityKeyValues(entity);
-
-                string sql = $"INSERT INTO CreditCard (NOLOCK) ({entityKeyValues.Keys.AsList().Parameterize()})";
-                                            //+ $"VALUES ({values})";
-
-                var creditCards = db.Execute(sql);
+                using (var command = conn.CreateCommand())
+                {
+                    ExecuteInsert(entity, command);
+                }
             }
         }
-
 
         public void Update(CreditCard entity)
         {
