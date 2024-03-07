@@ -2,16 +2,12 @@
 using ControleFinanceiro.Data.Interfaces;
 using ControleFinanceiro.Models;
 using Dapper;
-using System;
-using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using ControleFinanceiro.CrossCutting.Utilities;
 
 namespace ControleFinanceiro.Data.Implementation
 {
-    public sealed class CreditCardRepository : IBaseRepository<CreditCard>
+    public sealed class CreditCardRepository : BaseRepository<CreditCard>, IBaseRepository<CreditCard>
     {
         private readonly IContext _context;
 
@@ -37,12 +33,23 @@ namespace ControleFinanceiro.Data.Implementation
             throw new NotImplementedException();
         }
 
-        public void Insert(CreditCard obj)
+        public void Insert(CreditCard entity)
         {
-            throw new NotImplementedException();
+            using (var db = new SqlConnection(_context.GetConnectionString()))
+            {
+                db.Open();
+
+                Dictionary<string, object> entityKeyValues = GetEntityKeyValues(entity);
+
+                string sql = $"INSERT INTO CreditCard (NOLOCK) ({entityKeyValues.Keys.AsList().Parameterize()})";
+                                            //+ $"VALUES ({values})";
+
+                var creditCards = db.Execute(sql);
+            }
         }
 
-        public void Update(CreditCard obj)
+
+        public void Update(CreditCard entity)
         {
             throw new NotImplementedException();
         }

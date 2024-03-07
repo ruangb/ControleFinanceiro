@@ -15,10 +15,13 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddAutoMapper(typeof(CreditCardDTO), typeof(CreditCard));
-builder.Services.AddAutoMapper(typeof(CreditCardDTO), typeof(CreditCardViewModel));
-var mapper = new MapperConfiguration(m => m.CreateMap<CreditCardDTO, CreditCardViewModel>().ReverseMap());
-mapper.CreateMapper();
+var mapperConfig = new MapperConfiguration(m => {
+    m.CreateMap<CreditCardDTO, CreditCardViewModel>().ReverseMap();
+    m.CreateMap<CreditCardDTO, CreditCard>().ReverseMap();
+});
+
+IMapper mapper = mapperConfig.CreateMapper();
+builder.Services.AddSingleton(mapper);
 
 builder.Services.AddSingleton<IContext, Context>();
 builder.Services.AddScoped<IBaseRepository<CreditCard>, CreditCardRepository>();

@@ -19,10 +19,24 @@ namespace ControleFinanceiro.WebSite.Controllers
 
         public IActionResult Index()
         {
-            var creditCards = _baseAppService.GetAll();
-            var creditCardsViewModel = _mapper.Map<CreditCardViewModel>(creditCards);
+            var dtos = _baseAppService.GetAll();
+            var viewModels = _mapper.Map<IList<CreditCardViewModel>>(dtos);
 
-            return View(creditCardsViewModel);
+            return View(viewModels);
+        }
+
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Create(CreditCardViewModel viewModel)
+        {
+            var dto = _mapper.Map<CreditCardDTO>(viewModel);
+            _baseAppService.Insert(dto);
+
+            return Index();
         }
     }
 }

@@ -25,8 +25,6 @@ namespace ControleFinanceiro.Application.Implementation
 
         public IEnumerable<CreditCardDTO> GetAll()
         {
-            CreateMap();
-
             var creditCards = _mapper.Map<IEnumerable<CreditCardDTO>>(_baseManager.GetAll());
 
             return creditCards;
@@ -37,20 +35,15 @@ namespace ControleFinanceiro.Application.Implementation
             throw new NotImplementedException();
         }
 
-        public void Insert(CreditCardDTO obj)
+        public void Insert(CreditCardDTO dto)
         {
-            throw new NotImplementedException();
+            var entity = _mapper.Map<CreditCard>(dto);
+            _baseManager.Insert(entity);
         }
 
-        public void Update(CreditCardDTO obj)
+        public void Update(CreditCardDTO dto)
         {
             throw new NotImplementedException();
-        }
-
-        private void CreateMap()
-        {
-            var mapper = new MapperConfiguration(m => m.CreateMap<CreditCard, CreditCardDTO>().ReverseMap());
-            _mapper = mapper.CreateMapper();
         }
     }
 }

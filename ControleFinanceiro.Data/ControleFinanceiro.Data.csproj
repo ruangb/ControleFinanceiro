@@ -14,6 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ControleFinanceiro.CrossCutting\ControleFinanceiro.CrossCutting.csproj" />
     <ProjectReference Include="..\ControleFinanceiro.Models\ControleFinanceiro.Models.csproj" />
   </ItemGroup>
 

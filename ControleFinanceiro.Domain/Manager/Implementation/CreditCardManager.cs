@@ -28,14 +28,14 @@ namespace ControleFinanceiro.Domain.Manager.Implementation
             return _baseRepository.GetById(id);
         }
 
-        public void Insert(CreditCard obj)
+        public void Insert(CreditCard entity)
         {
-            _baseRepository.Insert(obj);
+            _baseRepository.Insert(entity);
         }
 
-        public void Update(CreditCard obj)
+        public void Update(CreditCard entity)
         {
-            _baseRepository.Update(obj);
+            _baseRepository.Update(entity);
         }
 
     }
