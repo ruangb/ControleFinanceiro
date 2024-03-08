@@ -1,63 +1,64 @@
 ﻿using ControleFinanceiro.CrossCutting.Utilities;
-using System.ComponentModel.DataAnnotations;
-using System.Data;
+using ControleFinanceiro.Data.Context;
+using Dapper;
 using System.Data.SqlClient;
-using System.Reflection;
 
 namespace ControleFinanceiro.Data.Implementation
 {
-    public class BaseRepository<T> where T : class 
+    public class BaseRepository<T> where T : class
     {
-        public void ExecuteInsert(T entity, SqlCommand command)
+        private readonly IContext _context;
+
+        public BaseRepository(IContext context)
         {
-            List<string> fieldNames = [];
+            _context = context;
+        }
 
-            GetEntityKeyValues(entity, command, fieldNames);
-
-            command.CommandText = $"INSERT INTO {typeof(T).Name} ({fieldNames.Parameterize().Replace("@", "")}) " +
-                                  $"VALUES ({fieldNames.Parameterize()})";
-
-            command.ExecuteNonQuery();
-        } 
-
-        public void GetEntityKeyValues(T entity, SqlCommand command, List<string> fieldNames)
+        protected IEnumerable<T> ExecuteGetAll()
         {
-            foreach (PropertyInfo prop in entity.GetType().GetProperties())
+            using (var conn = new SqlConnection(_context.GetConnectionString()))
             {
-                if (!prop.CustomAttributes.Any(x => x.AttributeType == typeof(KeyAttribute)))
+                conn.Open();
+                return conn.Query<T>($"SELECT * FROM {typeof(T).Name} (NOLOCK)");
+            }
+        }
+
+        protected T ExecuteGetById(int id)
+        {
+            using (var conn = new SqlConnection(_context.GetConnectionString()))
+            {
+                conn.Open();
+                return conn.QueryFirst<T>($"SELECT * FROM {typeof(T).Name} WHERE Id = {id}");
+            }
+        }
+
+        protected void ExecuteInsert(T entity)
+        {
+            using (var conn = new SqlConnection(_context.GetConnectionString()))
+            {
+                conn.Open();
+
+                using (var command = conn.CreateCommand())
                 {
-                    command.Parameters.Add(prop.Name, GetSqlDbTypeByStruct(prop.PropertyType)).Value = prop.GetValue(entity, null);
-                    fieldNames.Add(prop.Name);
+                    List<string> fieldNames = [];
+
+                    DataSupport<T>.GetEntityKeyValues(entity, command, fieldNames);
+
+                    command.CommandText = $"INSERT INTO {typeof(T).Name} ({fieldNames.Parameterize().Replace("@", "")}) " +
+                                          $"VALUES ({fieldNames.Parameterize()})";
+
+                    command.ExecuteNonQuery();
                 }
             }
         }
 
-        private SqlDbType GetSqlDbTypeByStruct(Type type)
+        protected void ExecuteDelete(int id)
         {
-            SqlDbType sqlDbType = SqlDbType.VarChar;
-
-            switch (Type.GetTypeCode(type))
+            using (var conn = new SqlConnection(_context.GetConnectionString()))
             {
-                case TypeCode.DateTime:
-                    sqlDbType = SqlDbType.DateTime;
-                    break;
-                case TypeCode.Int16:
-                    sqlDbType = SqlDbType.SmallInt;
-                    break;
-                case TypeCode.Int32:
-                    sqlDbType = SqlDbType.Int;
-                    break;
-                case TypeCode.Boolean:
-                    sqlDbType = SqlDbType.Bit;
-                    break;
-                case TypeCode.Decimal:
-                    sqlDbType = SqlDbType.Decimal;
-                    break;
-                default:
-                    break;
+                conn.Open();
+                conn.Execute($"DELETE FROM {typeof(T).Name} WHERE Id = {id}");    
             }
-
-            return sqlDbType;
         }
     }
 }

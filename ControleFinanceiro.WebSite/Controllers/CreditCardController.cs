@@ -2,7 +2,10 @@
 using ControleFinanceiro.Application.Interfaces;
 using ControleFinanceiro.CrossCutting.DTO;
 using ControleFinanceiro.WebSite.Models;
+using Humanizer;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ControleFinanceiro.WebSite.Controllers
 {
@@ -36,7 +39,36 @@ namespace ControleFinanceiro.WebSite.Controllers
             var dto = _mapper.Map<CreditCardDTO>(viewModel);
             _baseAppService.Insert(dto);
 
-            return Index();
+            return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult Delete(int? id)
+        {
+            if (id == null) return RedirectToAction(nameof(Error), new { message = "Id não fornecido." });
+
+            var dto = _baseAppService.GetById(id.Value);
+            var viewModel = _mapper.Map<CreditCardViewModel>(dto);
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        public IActionResult Delete(int id)
+        {
+            _baseAppService.Delete(id);
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult Error(string message)
+        {
+            var viewModel = new ErrorViewModel
+            {
+                Message = message,
+                RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
+            };
+
+            return View(viewModel);
         }
     }
 }

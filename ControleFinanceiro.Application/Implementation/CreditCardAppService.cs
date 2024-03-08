@@ -1,14 +1,8 @@
 ﻿using AutoMapper;
 using ControleFinanceiro.Application.Interfaces;
 using ControleFinanceiro.CrossCutting.DTO;
-using ControleFinanceiro.Domain;
 using ControleFinanceiro.Domain.Manager.Interfaces;
 using ControleFinanceiro.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ControleFinanceiro.Application.Implementation
 {
@@ -25,14 +19,14 @@ namespace ControleFinanceiro.Application.Implementation
 
         public IEnumerable<CreditCardDTO> GetAll()
         {
-            var creditCards = _mapper.Map<IEnumerable<CreditCardDTO>>(_baseManager.GetAll());
-
-            return creditCards;
+            var dto = _mapper.Map<IEnumerable<CreditCardDTO>>(_baseManager.GetAll());
+            return dto;
         }
 
         public CreditCardDTO GetById(int id)
         {
-            throw new NotImplementedException();
+            var dto = _mapper.Map<CreditCardDTO>(_baseManager.GetById(id));
+            return dto;
         }
 
         public void Insert(CreditCardDTO dto)
@@ -44,6 +38,11 @@ namespace ControleFinanceiro.Application.Implementation
         public void Update(CreditCardDTO dto)
         {
             throw new NotImplementedException();
+        }
+
+        public void Delete(int id)
+        {
+            _baseManager.Delete(id);
         }
     }
 }

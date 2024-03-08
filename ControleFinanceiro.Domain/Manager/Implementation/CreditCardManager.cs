@@ -1,9 +1,4 @@
 ﻿using ControleFinanceiro.Domain.Manager.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ControleFinanceiro.Data.Interfaces;
 using ControleFinanceiro.Models;
 
@@ -36,6 +31,11 @@ namespace ControleFinanceiro.Domain.Manager.Implementation
         public void Update(CreditCard entity)
         {
             _baseRepository.Update(entity);
+        }
+
+        public void Delete(int id)
+        {
+            _baseRepository.Delete(id);
         }
 
     }

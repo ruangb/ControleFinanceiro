@@ -1,6 +1,4 @@
-﻿using ControleFinanceiro.Domain;
-
-namespace ControleFinanceiro.Application.Interfaces
+﻿namespace ControleFinanceiro.Application.Interfaces
 {
     public interface IBaseAppService<T> where T : class
     {     
@@ -8,5 +6,6 @@ namespace ControleFinanceiro.Application.Interfaces
         T GetById(int id);
         void Insert(T obj);
         void Update(T obj);
+        void Delete(int id);
     }
 }

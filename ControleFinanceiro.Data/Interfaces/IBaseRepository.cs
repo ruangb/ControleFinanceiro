@@ -12,5 +12,7 @@ namespace ControleFinanceiro.Data.Interfaces
         T GetById(int id);
         void Insert(T entity);
         void Update(T entity);
+        void Delete(int id);
+
     }
 }
