@@ -4,14 +4,13 @@ using ControleFinanceiro.CrossCutting;
 using ControleFinanceiro.CrossCutting.DTO;
 using ControleFinanceiro.Domain.Manager.Interfaces;
 using ControleFinanceiro.Models;
-using System.Collections.Generic;
 
 namespace ControleFinanceiro.Application.Implementation
 {
     public sealed class CreditCardAppService : IBaseAppService<CreditCardDTO>
     {
         private readonly IBaseManager<CreditCard> _baseManager;
-        private IMapper _mapper;
+        private readonly IMapper _mapper;
 
         public CreditCardAppService(IBaseManager<CreditCard> baseManager, IMapper mapper)
         {
@@ -47,9 +46,22 @@ namespace ControleFinanceiro.Application.Implementation
             _baseManager.Insert(entity);
         }
 
-        public void Update(CreditCardDTO dto)
+        public AppServiceResult<CreditCardDTO> Update(CreditCardDTO dto)
         {
-            throw new NotImplementedException();
+            AppServiceResult<CreditCardDTO> result = new();
+
+            try
+            {
+                var entity = _mapper.Map<CreditCard>(dto);
+                _baseManager.Update(entity);
+                result.BuildSucessResult(dto);
+            }
+            catch (Exception ex)
+            {
+                result.BuildErrorResult(ex);
+            }
+
+            return result;
         }
 
         public void Delete(int id)

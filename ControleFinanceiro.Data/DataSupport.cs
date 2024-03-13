@@ -2,12 +2,26 @@
 using System.Data.SqlClient;
 using System.Data;
 using System.Reflection;
+using ControleFinanceiro.CrossCutting.Utilities;
 
 namespace ControleFinanceiro.Data
 {
     public static class DataSupport<T> where T : class
     {
-        public static void GetEntityKeyValues(T entity, SqlCommand command, List<string> fieldNames)
+        public static string GenerateSqlInsert(List<string> fieldNames)
+        {
+            return $"INSERT INTO {typeof(T).Name} ({fieldNames.Parameterize().Replace("@", "")}) " +
+                   $"VALUES ({fieldNames.Parameterize()})";
+        }
+
+        public static string GenerateSqlUpdate(int id, T entity)
+        {
+            return $"UPDATE {typeof(T).Name} " +
+                   $"SET {GetSqlUpdateByEntityValues(entity)}" +
+                   $"WHERE Id = {id}";
+        }
+
+        public static void SetCommandParametersByEntityValues(T entity, SqlCommand command, List<string> fieldNames)
         {
             foreach (PropertyInfo prop in entity.GetType().GetProperties())
             {
@@ -17,6 +31,20 @@ namespace ControleFinanceiro.Data
                     fieldNames.Add(prop.Name);
                 }
             }
+        }
+
+        private static string GetSqlUpdateByEntityValues(T entity)
+        {
+            string sql = "";
+            foreach (PropertyInfo prop in entity.GetType().GetProperties())
+            {
+                if (!prop.CustomAttributes.Any(x => x.AttributeType == typeof(KeyAttribute)))
+                {
+                    sql += $"{prop.Name} = '{prop.GetValue(entity, null)}',";
+                }
+            }
+
+            return sql.Remove(sql.Length - 1);
         }
 
         public static SqlDbType GetSqlDbTypeByStruct(Type type)

@@ -1,6 +1,7 @@
 ﻿using ControleFinanceiro.Data.Context;
 using ControleFinanceiro.Data.Interfaces;
 using ControleFinanceiro.Models;
+using static Dapper.SqlMapper;
 
 namespace ControleFinanceiro.Data.Implementation
 {
@@ -27,7 +28,7 @@ namespace ControleFinanceiro.Data.Implementation
 
         public void Update(CreditCard entity)
         {
-            throw new NotImplementedException();
+            ExecuteUpdate(entity.Id, entity);
         }
 
         public void Delete(int id)

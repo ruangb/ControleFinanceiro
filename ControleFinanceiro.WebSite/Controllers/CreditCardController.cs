@@ -22,8 +22,7 @@ namespace ControleFinanceiro.WebSite.Controllers
         {
             var dtos = _baseAppService.GetAll();
 
-            if (!dtos.Sucess) 
-                return RedirectToAction(nameof(Error), new { message = dtos.Message });
+            if (!dtos.Sucess) return RedirectToError(dtos.Message);
 
             var viewModels = _mapper.Map<IList<CreditCardViewModel>>(dtos.Model);
 
@@ -44,9 +43,29 @@ namespace ControleFinanceiro.WebSite.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        public IActionResult Edit(int? id)
+        {
+            if (id == null) return RedirectToError("Id não fornecido.");
+
+            var dto = _baseAppService.GetById(id.Value);
+            var viewModel = _mapper.Map<CreditCardViewModel>(dto);
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        public IActionResult Edit(CreditCardViewModel viewModel)
+        {
+            var dto = _mapper.Map<CreditCardDTO>(viewModel);
+
+            _baseAppService.Update(dto);
+
+            return RedirectToAction(nameof(Index));
+        }
+
         public IActionResult Delete(int? id)
         {
-            if (id == null) return RedirectToAction(nameof(Error), new { message = "Id não fornecido." });
+            if (id == null) return RedirectToError("Id não fornecido.");
 
             var dto = _baseAppService.GetById(id.Value);
             var viewModel = _mapper.Map<CreditCardViewModel>(dto);
@@ -70,6 +89,11 @@ namespace ControleFinanceiro.WebSite.Controllers
             };
 
             return View(viewModel);
+        }
+
+        private RedirectToActionResult RedirectToError(string message)
+        {
+            return RedirectToAction(nameof(Error), new { message });
         }
     }
 }

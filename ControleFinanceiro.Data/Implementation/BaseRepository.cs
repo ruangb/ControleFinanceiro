@@ -42,13 +42,20 @@ namespace ControleFinanceiro.Data.Implementation
                 {
                     List<string> fieldNames = [];
 
-                    DataSupport<T>.GetEntityKeyValues(entity, command, fieldNames);
+                    DataSupport<T>.SetCommandParametersByEntityValues(entity, command, fieldNames);
 
-                    command.CommandText = $"INSERT INTO {typeof(T).Name} ({fieldNames.Parameterize().Replace("@", "")}) " +
-                                          $"VALUES ({fieldNames.Parameterize()})";
-
+                    command.CommandText = DataSupport<T>.GenerateSqlInsert(fieldNames);
                     command.ExecuteNonQuery();
                 }
+            }
+        }
+
+        protected void ExecuteUpdate(int id, T entity)
+        {
+            using (var conn = new SqlConnection(_context.GetConnectionString()))
+            {
+                conn.Open();
+                conn.Execute(DataSupport<T>.GenerateSqlUpdate(id, entity));
             }
         }
 
