@@ -2,10 +2,8 @@
 using ControleFinanceiro.Application.Interfaces;
 using ControleFinanceiro.CrossCutting.DTO;
 using ControleFinanceiro.WebSite.Models;
-using Humanizer;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ControleFinanceiro.WebSite.Controllers
 {
@@ -23,7 +21,11 @@ namespace ControleFinanceiro.WebSite.Controllers
         public IActionResult Index()
         {
             var dtos = _baseAppService.GetAll();
-            var viewModels = _mapper.Map<IList<CreditCardViewModel>>(dtos);
+
+            if (!dtos.Sucess) 
+                return RedirectToAction(nameof(Error), new { message = dtos.Message });
+
+            var viewModels = _mapper.Map<IList<CreditCardViewModel>>(dtos.Model);
 
             return View(viewModels);
         }
@@ -56,7 +58,6 @@ namespace ControleFinanceiro.WebSite.Controllers
         public IActionResult Delete(int id)
         {
             _baseAppService.Delete(id);
-
             return RedirectToAction(nameof(Index));
         }
 

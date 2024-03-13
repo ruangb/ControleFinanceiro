@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using ControleFinanceiro.Application.Interfaces;
+using ControleFinanceiro.CrossCutting;
 using ControleFinanceiro.CrossCutting.DTO;
 using ControleFinanceiro.Domain.Manager.Interfaces;
 using ControleFinanceiro.Models;
+using System.Collections.Generic;
 
 namespace ControleFinanceiro.Application.Implementation
 {
@@ -17,10 +19,20 @@ namespace ControleFinanceiro.Application.Implementation
             _mapper = mapper;
         }
 
-        public IEnumerable<CreditCardDTO> GetAll()
+        public AppServiceResult<IEnumerable<CreditCardDTO>> GetAll()
         {
-            var dto = _mapper.Map<IEnumerable<CreditCardDTO>>(_baseManager.GetAll());
-            return dto;
+            AppServiceResult<IEnumerable<CreditCardDTO>> result = new();
+
+            try
+            {
+                result.BuildSucessResult(_mapper.Map<IEnumerable<CreditCardDTO>>(_baseManager.GetAll()));
+            }
+            catch (Exception ex)
+            {
+                result.BuildErrorResult(ex);
+            }
+
+            return result;
         }
 
         public CreditCardDTO GetById(int id)
