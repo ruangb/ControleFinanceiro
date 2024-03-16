@@ -1,11 +1,10 @@
-﻿@model ControleFinanceiro.WebSite.Models.CreditCardViewModel
+﻿@model ControleFinanceiro.WebSite.Models.PersonViewModel
 
 @{
     ViewData["Title"] = "Create";
 }
 
-<h4>Criar @Model.ToString()</h4>
-
+<h4> Criar @PersonViewModel.ObjectName </h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -16,15 +15,10 @@
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="DueDay" class="control-label"></label>
-                <input asp-for="DueDay" class="form-control" />
-                <span asp-validation-for="DueDay" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ClosingDays" class="control-label"></label>
-                <input asp-for="ClosingDays" class="form-control" />
-                <span asp-validation-for="ClosingDays" class="text-danger"></span>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="Main" /> @Html.DisplayNameFor(model => model.Main)
+                </label>
             </div>
             <div class="form-group form-check">
                 <label class="form-check-label">

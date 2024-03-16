@@ -1,5 +1,4 @@
-﻿using ControleFinanceiro.CrossCutting.Utilities;
-using ControleFinanceiro.Data.Context;
+﻿using ControleFinanceiro.Data.Context;
 using Dapper;
 using System.Data.SqlClient;
 
@@ -28,7 +27,7 @@ namespace ControleFinanceiro.Data.Implementation
             using (var conn = new SqlConnection(_context.GetConnectionString()))
             {
                 conn.Open();
-                return conn.QueryFirst<T>($"SELECT * FROM {typeof(T).Name} WHERE Id = {id}");
+                return conn.QueryFirst<T>($"SELECT * FROM {typeof(T).Name} (NOLOCK) WHERE Id = {id}");
             }
         }
 

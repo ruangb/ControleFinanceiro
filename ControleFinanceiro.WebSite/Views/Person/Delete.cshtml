@@ -1,4 +1,4 @@
-﻿@model ControleFinanceiro.WebSite.Models.CreditCardViewModel
+﻿@model ControleFinanceiro.WebSite.Models.PersonViewModel
 
 @{
     ViewData["Title"] = $"Deletar {Model.ToString()}";
@@ -7,7 +7,7 @@
 <h4>Deletar @Model.ToString()</h4>
 
 <div>
-    <h4>CreditCardViewModel</h4>
+    <h4>PersonViewModel</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -23,16 +23,10 @@
             @Html.DisplayFor(model => model.Name)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DueDay)
+            @Html.DisplayNameFor(model => model.Main)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DueDay)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ClosingDays)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ClosingDays)
+            @Html.DisplayFor(model => model.Main)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Inactive)

@@ -4,28 +4,28 @@ using ControleFinanceiro.Models;
 
 namespace ControleFinanceiro.Data.Implementation
 {
-    public sealed class CreditCardRepository : BaseRepository<CreditCard>, IBaseRepository<CreditCard>
+    public sealed class PersonRepository : BaseRepository<Person>, IBaseRepository<Person>
     {
-        public CreditCardRepository(IContext context) : base (context)
+        public PersonRepository(IContext context) : base (context)
         {
         }
 
-        public IEnumerable<CreditCard> GetAll()
+        public IEnumerable<Person> GetAll()
         {
             return ExecuteGetAll();
         }
 
-        public CreditCard GetById(int id)
+        public Person GetById(int id)
         {
             return ExecuteGetById(id);
         }
 
-        public void Insert(CreditCard entity)
+        public void Insert(Person entity)
         {
             ExecuteInsert(entity);
         }
 
-        public void Update(CreditCard entity)
+        public void Update(Person entity)
         {
             ExecuteUpdate(entity.Id, entity);
         }

@@ -3,16 +3,13 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ControleFinanceiro.WebSite.Models
 {
-    public class CreditCardViewModel : BaseViewModel
+    public class PersonViewModel : BaseViewModel
     {
         [DisplayName("Nome")]
         public required string Name { get => name; set => name = value.Trim(); }
 
-        [DisplayName("Dia de Vencimento")]
-        public required short DueDay { get; set; }
-
-        [DisplayName("Dias de fechamento antes do vencimento")]
-        public required short ClosingDays { get; set; }
+        [DisplayName("Principal")]
+        public required bool Main { get; set; }
 
         [DisplayName("Inativo")]
         public required bool Inactive { get; set; }
