@@ -20,8 +20,9 @@ namespace ControleFinanceiro.WebSite.Models
         public required string name;
 
         #region Text Properties
-        public static string? ObjectName { get => "Pessoa"; }
-        public static string? Pronoun { get => "a"; }
+        public static string? ObjectName { get => "Cartão de Crédito"; }
+        public static string? ObjectNamePlural { get => "Cartões de Crédito"; }
+        public static string? Pronoun { get => "o"; }
         #endregion
     }
 }

@@ -1,13 +1,13 @@
 ﻿@model IEnumerable<ControleFinanceiro.WebSite.Models.PersonViewModel>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = PersonViewModel.ObjectNamePlural;
 }
 
-<h1>Index</h1>
+<h4>@PersonViewModel.ObjectNamePlural</h4>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">@($"Nov{PersonViewModel.Pronoun} {PersonViewModel.ObjectName}")</a>
 </p>
 <table class="table">
     <thead>

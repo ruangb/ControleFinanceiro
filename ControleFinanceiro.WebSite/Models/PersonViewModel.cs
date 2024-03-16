@@ -18,6 +18,7 @@ namespace ControleFinanceiro.WebSite.Models
 
         #region Text Properties
         public static string? ObjectName { get => "Pessoa"; }
+        public static string? ObjectNamePlural { get => "Pessoas"; }
         public static string? Pronoun { get => "a"; }
         #endregion
     }

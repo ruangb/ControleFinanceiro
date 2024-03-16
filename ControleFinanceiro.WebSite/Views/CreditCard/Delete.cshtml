@@ -1,13 +1,12 @@
 ﻿@model ControleFinanceiro.WebSite.Models.CreditCardViewModel
 
 @{
-    ViewData["Title"] = $"Deletar {Model.ToString()}";
+    ViewData["Title"] = $"Deletar {CreditCardViewModel.ObjectName}";
 }
 
-<h4>Deletar @Model.ToString()</h4>
+<h4>Deletar @CreditCardViewModel.ObjectName</h4>
 
 <div>
-    <h4>CreditCardViewModel</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -43,7 +42,7 @@
     </dl>
     
     <form asp-action="Delete">
-        <input type="submit" value="Delete" class="btn btn-danger" confirm="Tem certeza que deseja deletar @PersonViewModel.Pronoun @PersonViewModel.ObjectName?" /> |
-        <a asp-action="Index">Back to List</a>
+        <input type="submit" value="Delete" class="btn btn-danger" confirm="Tem certeza que deseja deletar @CreditCardViewModel.Pronoun @CreditCardViewModel.ObjectName?" /> |
+        <a asp-action="Index">Voltar à lista</a>
     </form>
 </div>

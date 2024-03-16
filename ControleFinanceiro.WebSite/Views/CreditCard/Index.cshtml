@@ -1,13 +1,13 @@
 ﻿@model IEnumerable<ControleFinanceiro.WebSite.Models.CreditCardViewModel>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = CreditCardViewModel.ObjectNamePlural;
 }
 
-<h1>Index</h1>
+<h4>@CreditCardViewModel.ObjectNamePlural</h4>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">@($"Nov{CreditCardViewModel.Pronoun} {CreditCardViewModel.ObjectName}")</a>
 </p>
 <table class="table">
     <thead>
