@@ -24,9 +24,9 @@ namespace ControleFinanceiro.WebSite.Controllers
 
             if (!result.Success) return RedirectToError(result.Message);
 
-            var viewModels = _mapper.Map<IList<PersonViewModel>>(result.Model);
+            var Models = _mapper.Map<IList<PersonViewModel>>(result.Model);
 
-            return View(viewModels);
+            return View(Models);
         }
 
         public IActionResult Create()
@@ -78,7 +78,7 @@ namespace ControleFinanceiro.WebSite.Controllers
 
             if (!result.Success) return RedirectToError(result.Message);
 
-            var viewModel = _mapper.Map<PersonViewModel>(result);
+            var viewModel = _mapper.Map<PersonViewModel>(result.Model);
 
             return View(viewModel);
         }

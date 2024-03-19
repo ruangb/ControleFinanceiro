@@ -1,4 +1,4 @@
-﻿@model ControleFinanceiro.WebSite.Models.PersonViewModel
+﻿@model             PersonViewModel
 
 @{
     ViewData["Title"] = $"Deletar {PersonViewModel.ObjectName}";
@@ -36,7 +36,7 @@
     </dl>
     
     <form asp-action="Delete">
-        <input type="submit" value="Delete" class="btn btn-danger" confirm="Tem certeza que deseja deletar @PersonViewModel.Pronoun @PersonViewModel.ObjectName?" /> |
+        <input type="submit" value="Delete" class="btn btn-danger" onclick="return confirm('Tem certeza que deseja deletar @PersonViewModel.Pronoun @PersonViewModel.ObjectName?')" /> |
         <a asp-action="Index">Voltar à lista</a>
     </form>
 </div>

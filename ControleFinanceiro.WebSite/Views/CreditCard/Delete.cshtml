@@ -42,7 +42,7 @@
     </dl>
     
     <form asp-action="Delete">
-        <input type="submit" value="Delete" class="btn btn-danger" confirm="Tem certeza que deseja deletar @CreditCardViewModel.Pronoun @CreditCardViewModel.ObjectName?" /> |
+        <input type="submit" value="Delete" class="btn btn-danger" confirm="return confirm('Tem certeza que deseja deletar @CreditCardViewModel.Pronoun @CreditCardViewModel.ObjectName?')" /> |
         <a asp-action="Index">Voltar à lista</a>
     </form>
 </div>

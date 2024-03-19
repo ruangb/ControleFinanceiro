@@ -24,9 +24,9 @@ namespace ControleFinanceiro.WebSite.Controllers
 
             if (!result.Success) return RedirectToError(result.Message);
 
-            var viewModels = _mapper.Map<IList<CreditCardViewModel>>(result.Model);
+            var Models = _mapper.Map<IList<CreditCardViewModel>>(result.Model);
 
-            return View(viewModels);
+            return View(Models);
         }
 
         public IActionResult Create()

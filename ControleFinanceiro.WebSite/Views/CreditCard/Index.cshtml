@@ -5,11 +5,11 @@
 }
 
 <div>
-<h4 class="float-start">@CreditCardViewModel.ObjectNamePlural</h4>
+    <h4 class="float-start">@CreditCardViewModel.ObjectNamePlural</h4>
 
     <p class="float-end">
-    <a asp-action="Create" class="btn btn-primary">@($"Nov{CreditCardViewModel.Pronoun} {CreditCardViewModel.ObjectName}")</a>
-</p>
+        <a asp-action="Create" class="btn btn-success">@($"Nov{CreditCardViewModel.Pronoun} {CreditCardViewModel.ObjectName}")</a>
+    </p>
 </div>
 <table class="table">
     <thead>
@@ -17,7 +17,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.Id)
             </th>
-            <th>
+            <th class="w-25">
                 @Html.DisplayNameFor(model => model.Name)
             </th>
             <th>
@@ -33,29 +33,30 @@
         </tr>
     </thead>
     <tbody>
-    @foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DueDay)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ClosingDays)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Inactive)
-            </td>
-            <td>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DueDay)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ClosingDays)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Inactive)
+                </td>
+                <td style="text-align: end">
                     @Html.ActionLink("Editar", "Edit", new { id = item.Id }, new { @class = "btn btn-warning" })
                     @Html.ActionLink("Detalhes", "Details", new { id = item.Id }, new { @class = "btn btn-primary" })
                     @Html.ActionLink("Excluir", "Delete", new { id = item.Id }, new { @class = "btn btn-danger" })
-            </td>
-        </tr>
-    }
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

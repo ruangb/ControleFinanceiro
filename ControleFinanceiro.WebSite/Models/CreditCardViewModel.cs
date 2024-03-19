@@ -6,6 +6,8 @@ namespace ControleFinanceiro.WebSite.Models
     public class CreditCardViewModel : BaseViewModel
     {
         [DisplayName("Nome")]
+        [MinLength(2, ErrorMessage = "Informe ao menos {1} caracteres")]
+        [MaxLength(20, ErrorMessage = "Informe no máximo {1} caracteres")]
         public required string Name { get => name; set => name = value.Trim(); }
 
         [DisplayName("Dia de Vencimento")]
