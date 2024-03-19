@@ -1,13 +1,13 @@
 ﻿using AutoMapper;
 using ControleFinanceiro.Application.Interfaces;
+using ControleFinanceiro.CrossCutting;
 using ControleFinanceiro.CrossCutting.DTO;
 using ControleFinanceiro.WebSite.Models;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
 
 namespace ControleFinanceiro.WebSite.Controllers
 {
-    public class CreditCardController : Controller
+    public class CreditCardController : BaseController
     {
         private readonly IBaseAppService<CreditCardDTO> _baseAppService;
         private readonly IMapper _mapper;
@@ -20,11 +20,11 @@ namespace ControleFinanceiro.WebSite.Controllers
 
         public IActionResult Index()
         {
-            var dtos = _baseAppService.GetAll();
+            AppServiceResult<IEnumerable<CreditCardDTO>> result = _baseAppService.GetAll();
 
-            if (!dtos.Sucess) return RedirectToError(dtos.Message);
+            if (!result.Success) return RedirectToError(result.Message);
 
-            var viewModels = _mapper.Map<IList<CreditCardViewModel>>(dtos.Model);
+            var viewModels = _mapper.Map<IList<CreditCardViewModel>>(result.Model);
 
             return View(viewModels);
         }
@@ -38,7 +38,9 @@ namespace ControleFinanceiro.WebSite.Controllers
         public IActionResult Create(CreditCardViewModel viewModel)
         {
             var dto = _mapper.Map<CreditCardDTO>(viewModel);
-            _baseAppService.Insert(dto);
+            AppServiceResult<int> result = _baseAppService.Insert(dto);
+
+            if (!result.Success) return RedirectToError(result.Message);
 
             return RedirectToAction(nameof(Index));
         }
@@ -47,8 +49,11 @@ namespace ControleFinanceiro.WebSite.Controllers
         {
             if (id == null) return RedirectToError("Id não fornecido.");
 
-            var dto = _baseAppService.GetById(id.Value);
-            var viewModel = _mapper.Map<CreditCardViewModel>(dto);
+            AppServiceResult<CreditCardDTO> result = _baseAppService.GetById(id.Value);
+
+            if (!result.Success) return RedirectToError(result.Message);
+
+            var viewModel = _mapper.Map<CreditCardViewModel>(result.Model);
 
             return View(viewModel);
         }
@@ -58,7 +63,9 @@ namespace ControleFinanceiro.WebSite.Controllers
         {
             var dto = _mapper.Map<CreditCardDTO>(viewModel);
 
-            _baseAppService.Update(dto);
+            AppServiceBaseResult result = _baseAppService.Update(dto);
+
+            if (!result.Success) return RedirectToError(result.Message);
 
             return RedirectToAction(nameof(Index));
         }
@@ -67,8 +74,11 @@ namespace ControleFinanceiro.WebSite.Controllers
         {
             if (id == null) return RedirectToError("Id não fornecido.");
 
-            var dto = _baseAppService.GetById(id.Value);
-            var viewModel = _mapper.Map<CreditCardViewModel>(dto);
+            AppServiceResult<CreditCardDTO> result = _baseAppService.GetById(id.Value);
+
+            if (!result.Success) return RedirectToError(result.Message);
+
+            var viewModel = _mapper.Map<CreditCardViewModel>(result.Model);
 
             return View(viewModel);
         }
@@ -76,24 +86,11 @@ namespace ControleFinanceiro.WebSite.Controllers
         [HttpPost]
         public IActionResult Delete(int id)
         {
-            _baseAppService.Delete(id);
+            AppServiceBaseResult result = _baseAppService.Delete(id);
+
+            if (!result.Success) return RedirectToError(result.Message);
+
             return RedirectToAction(nameof(Index));
-        }
-
-        public IActionResult Error(string message)
-        {
-            var viewModel = new ErrorViewModel
-            {
-                Message = message,
-                RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
-            };
-
-            return View(viewModel);
-        }
-
-        private RedirectToActionResult RedirectToError(string message)
-        {
-            return RedirectToAction(nameof(Error), new { message });
         }
     }
 }

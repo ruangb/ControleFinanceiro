@@ -20,9 +20,9 @@ namespace ControleFinanceiro.Data.Implementation
             return ExecuteGetById(id);
         }
 
-        public void Insert(Person entity)
+        public int Insert(Person entity)
         {
-            ExecuteInsert(entity);
+            return ExecuteInsert(entity);
         }
 
         public void Update(Person entity)

@@ -23,9 +23,9 @@ namespace ControleFinanceiro.Domain.Manager.Implementation
             return _baseRepository.GetById(id);
         }
 
-        public void Insert(CreditCard entity)
+        public int Insert(CreditCard entity)
         {
-            _baseRepository.Insert(entity);
+            return _baseRepository.Insert(entity);
         }
 
         public void Update(CreditCard entity)

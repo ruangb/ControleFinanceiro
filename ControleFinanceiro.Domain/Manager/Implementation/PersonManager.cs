@@ -23,9 +23,9 @@ namespace ControleFinanceiro.Domain.Manager.Implementation
             return _baseRepository.GetById(id);
         }
 
-        public void Insert(Person entity)
+        public int Insert(Person entity)
         {
-            _baseRepository.Insert(entity);
+            return _baseRepository.Insert(entity);
         }
 
         public void Update(Person entity)

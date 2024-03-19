@@ -20,9 +20,9 @@ namespace ControleFinanceiro.Data.Implementation
             return ExecuteGetById(id);
         }
 
-        public void Insert(CreditCard entity)
+        public int Insert(CreditCard entity)
         {
-            ExecuteInsert(entity);
+            return ExecuteInsert(entity);
         }
 
         public void Update(CreditCard entity)

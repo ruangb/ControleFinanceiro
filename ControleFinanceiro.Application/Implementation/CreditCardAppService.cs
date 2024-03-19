@@ -34,27 +34,13 @@ namespace ControleFinanceiro.Application.Implementation
             return result;
         }
 
-        public CreditCardDTO GetById(int id)
-        {
-            var dto = _mapper.Map<CreditCardDTO>(_baseManager.GetById(id));
-            return dto;
-        }
-
-        public void Insert(CreditCardDTO dto)
-        {
-            var entity = _mapper.Map<CreditCard>(dto);
-            _baseManager.Insert(entity);
-        }
-
-        public AppServiceResult<CreditCardDTO> Update(CreditCardDTO dto)
+        public AppServiceResult<CreditCardDTO> GetById(int id)
         {
             AppServiceResult<CreditCardDTO> result = new();
 
             try
             {
-                var entity = _mapper.Map<CreditCard>(dto);
-                _baseManager.Update(entity);
-                result.BuildSucessResult(dto);
+                result.BuildSucessResult(_mapper.Map<CreditCardDTO>(_baseManager.GetById(id)));
             }
             catch (Exception ex)
             {
@@ -64,9 +50,56 @@ namespace ControleFinanceiro.Application.Implementation
             return result;
         }
 
-        public void Delete(int id)
+        public AppServiceResult<int> Insert(CreditCardDTO dto)
         {
-            _baseManager.Delete(id);
+            AppServiceResult<int> result = new();
+
+            try
+            {
+                var entity = _mapper.Map<CreditCard>(dto);
+                result.BuildSucessResult(_baseManager.Insert(entity));
+            }
+            catch (Exception ex)
+            {
+                result.BuildErrorResult(ex);
+            }
+
+            return result;
+        }
+
+        public AppServiceBaseResult Update(CreditCardDTO dto)
+        {
+            AppServiceBaseResult result = new();
+
+            try
+            {
+                var entity = _mapper.Map<CreditCard>(dto);
+                _baseManager.Update(entity);
+                result.BuildSucessResult();
+            }
+            catch (Exception ex)
+            {
+                result.BuildErrorResult(ex);
+            }
+
+            return result;
+        }
+
+        public AppServiceBaseResult Delete(int id)
+        {
+            AppServiceBaseResult result = new();
+
+            try
+            {
+                _baseManager.Delete(id);
+                result.BuildSucessResult();
+            }
+            catch (Exception ex)
+            {
+                result.BuildErrorResult(ex);
+            }
+
+            return result;
         }
     }
 }

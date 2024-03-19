@@ -4,11 +4,13 @@
     ViewData["Title"] = CreditCardViewModel.ObjectNamePlural;
 }
 
-<h4>@CreditCardViewModel.ObjectNamePlural</h4>
+<div>
+<h4 class="float-start">@CreditCardViewModel.ObjectNamePlural</h4>
 
-<p>
-    <a asp-action="Create">@($"Nov{CreditCardViewModel.Pronoun} {CreditCardViewModel.ObjectName}")</a>
+    <p class="float-end">
+    <a asp-action="Create" class="btn btn-primary">@($"Nov{CreditCardViewModel.Pronoun} {CreditCardViewModel.ObjectName}")</a>
 </p>
+</div>
 <table class="table">
     <thead>
         <tr>
@@ -49,9 +51,9 @@
                 @Html.DisplayFor(modelItem => item.Inactive)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-                @Html.ActionLink("Details", "Details", new { id = item.Id }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                    @Html.ActionLink("Editar", "Edit", new { id = item.Id }, new { @class = "btn btn-warning" })
+                    @Html.ActionLink("Detalhes", "Details", new { id = item.Id }, new { @class = "btn btn-primary" })
+                    @Html.ActionLink("Excluir", "Delete", new { id = item.Id }, new { @class = "btn btn-danger" })
             </td>
         </tr>
     }

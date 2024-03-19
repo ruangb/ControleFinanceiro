@@ -10,7 +10,7 @@ namespace ControleFinanceiro.Data.Interfaces
     {
         IEnumerable<T> GetAll();
         T GetById(int id);
-        void Insert(T entity);
+        int Insert(T entity);
         void Update(T entity);
         void Delete(int id);
 

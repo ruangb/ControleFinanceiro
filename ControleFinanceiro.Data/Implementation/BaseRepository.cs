@@ -31,7 +31,7 @@ namespace ControleFinanceiro.Data.Implementation
             }
         }
 
-        protected void ExecuteInsert(T entity)
+        protected int ExecuteInsert(T entity)
         {
             using (var conn = new SqlConnection(_context.GetConnectionString()))
             {
@@ -44,7 +44,7 @@ namespace ControleFinanceiro.Data.Implementation
                     DataSupport<T>.SetCommandParametersByEntityValues(entity, command, fieldNames);
 
                     command.CommandText = DataSupport<T>.GenerateSqlInsert(fieldNames);
-                    command.ExecuteNonQuery();
+                    return command.ExecuteNonQuery();
                 }
             }
         }

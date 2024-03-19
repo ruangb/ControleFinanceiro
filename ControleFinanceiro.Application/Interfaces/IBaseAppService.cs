@@ -5,9 +5,9 @@ namespace ControleFinanceiro.Application.Interfaces
     public interface IBaseAppService<T> where T : class
     {
         AppServiceResult<IEnumerable<T>> GetAll();
-        T GetById(int id);
-        void Insert(T obj);
-        AppServiceResult<T> Update(T obj);
-        void Delete(int id);
+        AppServiceResult<T> GetById(int id);
+        AppServiceResult<int> Insert(T obj);
+        AppServiceBaseResult Update(T obj);
+        AppServiceBaseResult Delete(int id);
     }
 }
