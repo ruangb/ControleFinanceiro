@@ -20,6 +20,8 @@ var mapperConfig = new MapperConfiguration(m => {
     m.CreateMap<CreditCardDTO, CreditCard>().ReverseMap();
     m.CreateMap<PersonDTO, PersonViewModel>().ReverseMap();
     m.CreateMap<PersonDTO, Person>().ReverseMap();
+    m.CreateMap<ExpenseDTO, ExpenseViewModel>().ReverseMap();
+    m.CreateMap<ExpenseDTO, Expense>().ReverseMap();
 });
 
 IMapper mapper = mapperConfig.CreateMapper();
@@ -32,6 +34,9 @@ builder.Services.AddScoped<IBaseAppService<CreditCardDTO>, CreditCardAppService>
 builder.Services.AddScoped<IBaseRepository<Person>, PersonRepository>();
 builder.Services.AddScoped<IBaseManager<Person>, PersonManager>();
 builder.Services.AddScoped<IBaseAppService<PersonDTO>, PersonAppService>();
+builder.Services.AddScoped<IBaseRepository<Expense>, ExpenseRepository>();
+builder.Services.AddScoped<IBaseManager<Expense>, ExpenseManager>();
+builder.Services.AddScoped<IBaseAppService<ExpenseDTO>, ExpenseAppService>();
 
 var app = builder.Build();
 
