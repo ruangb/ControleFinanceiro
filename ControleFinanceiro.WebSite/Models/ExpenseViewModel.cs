@@ -6,6 +6,7 @@ namespace ControleFinanceiro.WebSite.Models
 {
     public class ExpenseViewModel : BaseViewModel
     {
+        [DisplayName("Status")]
         public required string Status { get; set; }
 
         [DisplayName("Data da Transação")]
@@ -30,9 +31,9 @@ namespace ControleFinanceiro.WebSite.Models
         [DisplayName("Cartão de Crédito")]
         public int IdCreditCard { get; set; }
 
-        public required Person Person { get; set; }
+        public required PersonViewModel Person { get; set; }
 
-        public CreditCard? CreditCard { get; set; }
+        public CreditCardViewModel? CreditCard { get; set; }
 
         #region Text Properties
         public static string? ObjectName { get => "Despesa"; }
