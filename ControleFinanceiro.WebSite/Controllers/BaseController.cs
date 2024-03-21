@@ -21,6 +21,5 @@ namespace ControleFinanceiro.WebSite.Controllers
         {
             return RedirectToAction(nameof(Error), new { message });
         }
-
     }
 }

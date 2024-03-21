@@ -9,6 +9,8 @@ using ControleFinanceiro.Domain.Manager.Implementation;
 using ControleFinanceiro.Domain.Manager.Interfaces;
 using ControleFinanceiro.Models;
 using ControleFinanceiro.WebSite.Models;
+using Microsoft.AspNetCore.Localization;
+using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -58,5 +60,23 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+var ptBRCulture = new CultureInfo("pt-BR");
+var localizationOptions = new RequestLocalizationOptions()
+{
+    SupportedCultures = new List<CultureInfo>()
+    {
+        ptBRCulture
+    },
+    SupportedUICultures = new List<CultureInfo>()
+    {
+        ptBRCulture
+    },
+    DefaultRequestCulture = new RequestCulture(ptBRCulture),
+    FallBackToParentCultures = false,
+    FallBackToParentUICultures = false
+};
+
+app.UseRequestLocalization(localizationOptions);
 
 app.Run();
