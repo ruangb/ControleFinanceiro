@@ -8,9 +8,13 @@ namespace ControleFinanceiro.Models
     {
         [Key]
         public int Id { get; set; }
+        [Column]
         public required string Name { get; set; }
+        [Column]
         public required short DueDay { get; set; }
+        [Column]
         public required short ClosingDays { get; set; }
+        [Column]
         public required bool Inactive { get; set; }
     }
 }

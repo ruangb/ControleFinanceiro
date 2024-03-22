@@ -8,8 +8,11 @@ namespace ControleFinanceiro.Models
     {
         [Key]
         public int Id { get; set; }
+        [Column]
         public required string Name { get; set; }
+        [Column]
         public required bool Main { get; set; }
+        [Column]
         public required bool Inactive { get; set; }
     }
 }

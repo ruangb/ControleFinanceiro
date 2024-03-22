@@ -46,18 +46,6 @@ namespace ControleFinanceiro.WebSite.Controllers
             ViewBag.CreditCards = BuildCreditCardSelectListItem();
             ViewBag.Persons = BuildPersonSelectListItem();
 
-            var test = Enum.GetValues(typeof(Enums.ExpenseStatus));
-            List<SelectListItem> listItem = [];
-
-            foreach (var item in test)
-            {
-                listItem.Add(new SelectListItem(Enums.GetDescription((ExpenseStatus)item), item.GetHashCode().ToString(), false));
-            }
-
-            listItem.Insert(0, new SelectListItem("Selecione", 0.ToString(), true));
-
-            ViewBag.Statuses = listItem;
-
             return View();
         }
 

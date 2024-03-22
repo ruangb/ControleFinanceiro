@@ -8,6 +8,8 @@ namespace ControleFinanceiro.CrossCutting.Utilities
 
         public enum ExpenseStatus
         {
+            [Description("Selecione")]
+            None = 0,
             [Description("Pendente")]
             Pending = 1,
             [Description("Quitado")]

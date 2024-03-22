@@ -6,7 +6,7 @@ namespace ControleFinanceiro.WebSite.Controllers
 {
     public class BaseController : Controller
     {
-        protected IActionResult Error(string message)
+        public IActionResult Error(string message)
         {
             var viewModel = new ErrorViewModel
             {
@@ -19,7 +19,7 @@ namespace ControleFinanceiro.WebSite.Controllers
 
         protected RedirectToActionResult RedirectToError(string message)
         {
-            return RedirectToAction(nameof(Error), new { message });
+            return RedirectToAction("Error", "Base", new { message });
         }
     }
 }

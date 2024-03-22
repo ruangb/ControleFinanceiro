@@ -8,13 +8,23 @@ namespace ControleFinanceiro.Models
     {
         [Key]
         public int Id { get; set; }
+        [Column]
         public required string Status { get; set; }
-        public required DateTime OperationDate { get; set; }
+        [Column]
+        public DateTime OperationDate { get; set; }
+        [Column]
         public required string Description { get; set; }
-        public required decimal Amount { get; set; }
-        public required short ParcelQuantity { get; set; }
+        [Column]
+        public decimal Amount { get; set; }
+        [Column]
+        public short ParcelQuantity { get; set; }
+        [Column]
+        [Required]
+        [ForeignKey("IdPerson")]
         public int IdPerson { get; set; }
-        public int IdExpense { get; set; }
+        [Column]
+        [ForeignKey("IdCreditCard")]
+        public int? IdCreditCard { get; set; }
         public required Person Person { get; set; }
         public CreditCard? CreditCard { get; set; }
     }

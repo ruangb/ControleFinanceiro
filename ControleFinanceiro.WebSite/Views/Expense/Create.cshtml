@@ -15,7 +15,7 @@
             <div class="row">
                 <div class="col-md-6">
                     <label asp-for="Status" class="control-label"></label>
-                    <select asp-for="Status" asp-items="@ViewBag.Statuses" class="form-control"> 
+                    <select asp-for="Status" asp-items="@new SelectList(Enums.GetDescriptions<Enums.ExpenseStatus>())" class="form-control">
                     </select>
                     <span asp-validation-for="Status" class="text-danger"></span>
                 </div>

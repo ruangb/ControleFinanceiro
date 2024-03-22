@@ -3,6 +3,7 @@ using System.Data.SqlClient;
 using System.Data;
 using System.Reflection;
 using ControleFinanceiro.CrossCutting.Utilities;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ControleFinanceiro.Data
 {
@@ -25,7 +26,8 @@ namespace ControleFinanceiro.Data
         {
             foreach (PropertyInfo prop in entity.GetType().GetProperties())
             {
-                if (!prop.CustomAttributes.Any(x => x.AttributeType == typeof(KeyAttribute)))
+                if (!prop.CustomAttributes.Any(x => x.AttributeType == typeof(KeyAttribute)) 
+                    && prop.CustomAttributes.Any(x => x.AttributeType == typeof(ColumnAttribute)))
                 {
                     command.Parameters.Add(prop.Name, GetSqlDbTypeByStruct(prop.PropertyType)).Value = prop.GetValue(entity, null);
                     fieldNames.Add(prop.Name);
@@ -38,7 +40,8 @@ namespace ControleFinanceiro.Data
             string sql = "";
             foreach (PropertyInfo prop in entity.GetType().GetProperties())
             {
-                if (!prop.CustomAttributes.Any(x => x.AttributeType == typeof(KeyAttribute)))
+                if (!prop.CustomAttributes.Any(x => x.AttributeType == typeof(KeyAttribute))
+                    && prop.CustomAttributes.Any(x => x.AttributeType == typeof(ColumnAttribute)))
                 {
                     sql += $"{prop.Name} = '{prop.GetValue(entity, null)}',";
                 }
