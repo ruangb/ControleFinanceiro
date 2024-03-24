@@ -2,8 +2,8 @@
 using System.Data.SqlClient;
 using System.Data;
 using System.Reflection;
-using ControleFinanceiro.CrossCutting.Utilities;
 using System.ComponentModel.DataAnnotations.Schema;
+using ControleFinanceiro.CrossCutting.Utilities;
 
 namespace ControleFinanceiro.Data
 {
@@ -11,18 +11,18 @@ namespace ControleFinanceiro.Data
     {
         public static string GenerateSqlInsert(List<string> fieldNames)
         {
-            return $"INSERT INTO {typeof(T).Name} ({fieldNames.Parameterize().Replace("@", "")}) " +
+            return $@"INSERT INTO {typeof(T).Name} ({fieldNames.Parameterize().Replace("@", "")}) " +
                    $"VALUES ({fieldNames.Parameterize()})";
         }
 
-        public static string GenerateSqlUpdate(int id, T entity)
+        public static string GenerateSqlUpdate(int id, string sql)
         {
-            return $"UPDATE {typeof(T).Name} " +
-                   $"SET {GetSqlUpdateByEntityValues(entity)}" +
+            return $@"UPDATE {typeof(T).Name} " +
+                   $"SET {sql} " +
                    $"WHERE Id = {id}";
         }
 
-        public static void SetCommandParametersByEntityValues(T entity, SqlCommand command, List<string> fieldNames)
+        public static void SetCommandParametersForInsertByEntityValues(T entity, SqlCommand command, List<string> fieldNames)
         {
             foreach (PropertyInfo prop in entity.GetType().GetProperties())
             {
@@ -35,15 +35,16 @@ namespace ControleFinanceiro.Data
             }
         }
 
-        private static string GetSqlUpdateByEntityValues(T entity)
+        public static string SetCommandParametersForUpdateByEntityValues(T entity, SqlCommand command)
         {
-            string sql = "";
+            string sql = string.Empty;
             foreach (PropertyInfo prop in entity.GetType().GetProperties())
             {
                 if (!prop.CustomAttributes.Any(x => x.AttributeType == typeof(KeyAttribute))
                     && prop.CustomAttributes.Any(x => x.AttributeType == typeof(ColumnAttribute)))
                 {
-                    sql += $"{prop.Name} = '{prop.GetValue(entity, null)}',";
+                    sql += $"{prop.Name} = @{prop.Name},";
+                    command.Parameters.Add(prop.Name, GetSqlDbTypeByStruct(prop.PropertyType)).Value = prop.GetValue(entity, null);
                 }
             }
 

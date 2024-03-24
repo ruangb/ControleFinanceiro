@@ -1,9 +1,6 @@
 ﻿using ControleFinanceiro.Data.Context;
 using ControleFinanceiro.Data.Interfaces;
 using ControleFinanceiro.Models;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-using System.Reflection;
 using System.Data.SqlClient;
 using Dapper;
 

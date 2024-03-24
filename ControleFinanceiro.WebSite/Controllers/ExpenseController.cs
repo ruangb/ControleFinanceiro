@@ -6,8 +6,8 @@ using ControleFinanceiro.CrossCutting.Utilities;
 using ControleFinanceiro.WebSite.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System.Collections;
-using static ControleFinanceiro.CrossCutting.Utilities.Enums;
+using System.Globalization;
+using System.Linq;
 
 namespace ControleFinanceiro.WebSite.Controllers
 {
@@ -45,6 +45,7 @@ namespace ControleFinanceiro.WebSite.Controllers
         {
             ViewBag.CreditCards = BuildCreditCardSelectListItem();
             ViewBag.Persons = BuildPersonSelectListItem();
+            ViewBag.Status = new SelectList(Enums.GetDescriptions<Enums.ExpenseStatus>());
 
             return View();
         }
@@ -72,6 +73,7 @@ namespace ControleFinanceiro.WebSite.Controllers
 
             ViewBag.CreditCards = BuildCreditCardSelectListItem(viewModel.IdCreditCard);
             ViewBag.Persons = BuildPersonSelectListItem(viewModel.IdPerson);
+            ViewBag.Status = new SelectList(Enums.GetDescriptions<Enums.ExpenseStatus>(), viewModel.Status);
 
             return View(viewModel);
         }
@@ -123,8 +125,7 @@ namespace ControleFinanceiro.WebSite.Controllers
                 listItem.Add(new SelectListItem(item.Name, item.Id.ToString(), item.Id == id));
             }
 
-            if (id == null)
-                listItem.Insert(0, new SelectListItem("Selecione", 0.ToString(), true));
+            listItem.Insert(0, new SelectListItem("Selecione", 0.ToString(), id == null));
 
             return listItem;
         }
@@ -140,8 +141,7 @@ namespace ControleFinanceiro.WebSite.Controllers
                 listItem.Add(new SelectListItem(item.Name, item.Id.ToString(), item.Id == id));
             }
 
-            if (id == null)
-                listItem.Insert(0, new SelectListItem("Selecione", 0.ToString(), true));
+            listItem.Insert(0, new SelectListItem("Selecione", 0.ToString(), id == null));
 
             return listItem;
         }

@@ -9,7 +9,7 @@ namespace ControleFinanceiro.WebSite.Models
         public required string Status { get; set; }
 
         [DisplayName("Data da Transação")]
-        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
+        [DataType(DataType.Date)]
         public DateTime OperationDate { get; set; }
 
         [DisplayName("Descrição")]
@@ -27,6 +27,7 @@ namespace ControleFinanceiro.WebSite.Models
         public short ParcelQuantity { get; set; }
 
         [DisplayName("Pessoa")]
+        [DeniedValues(0, ErrorMessage = "Selecione um valor")]
         public required int IdPerson { get; set; }
 
         [DisplayName("Cartão de Crédito")]

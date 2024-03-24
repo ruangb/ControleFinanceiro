@@ -41,7 +41,7 @@ namespace ControleFinanceiro.Data.Implementation
                 {
                     List<string> fieldNames = [];
 
-                    DataSupport<T>.SetCommandParametersByEntityValues(entity, command, fieldNames);
+                    DataSupport<T>.SetCommandParametersForInsertByEntityValues(entity, command, fieldNames);
 
                     command.CommandText = DataSupport<T>.GenerateSqlInsert(fieldNames);
                     return command.ExecuteNonQuery();
@@ -54,7 +54,15 @@ namespace ControleFinanceiro.Data.Implementation
             using (var conn = new SqlConnection(_context.GetConnectionString()))
             {
                 conn.Open();
-                conn.Execute(DataSupport<T>.GenerateSqlUpdate(id, entity));
+                using (var command = conn.CreateCommand())
+                {
+                    List<string> fieldNames = [];
+
+                    string sql = DataSupport<T>.SetCommandParametersForUpdateByEntityValues(entity, command);
+
+                    command.CommandText = DataSupport<T>.GenerateSqlUpdate(id, sql);
+                    command.ExecuteNonQuery();
+                }
             }
         }
 
