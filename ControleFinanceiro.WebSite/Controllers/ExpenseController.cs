@@ -6,8 +6,6 @@ using ControleFinanceiro.CrossCutting.Utilities;
 using ControleFinanceiro.WebSite.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System.Globalization;
-using System.Linq;
 
 namespace ControleFinanceiro.WebSite.Controllers
 {

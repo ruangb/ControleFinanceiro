@@ -13,6 +13,5 @@ namespace ControleFinanceiro.Data.Interfaces
         int Insert(T entity);
         void Update(T entity);
         void Delete(int id);
-
     }
 }

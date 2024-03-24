@@ -9,10 +9,12 @@ namespace ControleFinanceiro.Data.Implementation
     public sealed class ExpenseRepository : BaseRepository<Expense>, IBaseRepository<Expense>
     {
         private readonly IContext _context;
+        private readonly IBaseRepository<ExpenseInstallment> _expenseInstallment;
 
-        public ExpenseRepository(IContext context) : base (context)
+        public ExpenseRepository(IContext context, IBaseRepository<ExpenseInstallment> expenseInstallment) : base (context)
         {
             _context = context;
+            _expenseInstallment = expenseInstallment;
         }
 
         public IEnumerable<Expense> GetAll()
@@ -43,6 +45,25 @@ namespace ControleFinanceiro.Data.Implementation
         public int Insert(Expense entity)
         {
             return ExecuteInsert(entity);
+
+            //ExecuteInsert(entity);
+
+            //List<ExpenseInstallment> installments = new List<ExpenseInstallment>();
+            //decimal installmentValue = entity.Amount / entity.ParcelQuantity;
+
+            //for (int i = 1; i <= entity.ParcelQuantity; i++)
+            //{
+            //    DateTime dueDate = entity.OperationDate;
+
+            //    if (i > 1)
+            //        dueDate.AddDays(30 * i);
+
+            //    installments.Add(new ExpenseInstallment(entity.Id, (short)i, entity.Status, dueDate, installmentValue));
+            //}
+
+            //_expenseInstallment.Insert(entity);
+
+            //ExecuteInsert(installments);
         }
 
         public void Update(Expense entity)
