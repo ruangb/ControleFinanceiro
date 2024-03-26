@@ -11,8 +11,9 @@ namespace ControleFinanceiro.Data
     {
         public static string GenerateSqlInsert(List<string> fieldNames)
         {
-            return $@"INSERT INTO {typeof(T).Name} ({fieldNames.Parameterize().Replace("@", "")}) " +
-                   $"VALUES ({fieldNames.Parameterize()})";
+            return $@"INSERT INTO {typeof(T).Name} ({fieldNames.Parameterize().Replace("@", "")}) 
+                   OUTPUT INSERTED.ID
+                   VALUES ({fieldNames.Parameterize()})";
         }
 
         public static string GenerateSqlUpdate(int id, string sql)
@@ -22,15 +23,47 @@ namespace ControleFinanceiro.Data
                    $"WHERE Id = {id}";
         }
 
-        public static void SetCommandParametersForInsertByEntityValues(T entity, SqlCommand command, List<string> fieldNames)
+        public static void SetCommandParametersForInsertByEntityValues(T entity, SqlCommand command, List<string> fieldNames, int count = 0)
         {
             foreach (PropertyInfo prop in entity.GetType().GetProperties())
             {
-                if (!prop.CustomAttributes.Any(x => x.AttributeType == typeof(KeyAttribute)) 
+                if (!prop.CustomAttributes.Any(x => x.AttributeType == typeof(KeyAttribute))
                     && prop.CustomAttributes.Any(x => x.AttributeType == typeof(ColumnAttribute)))
                 {
-                    command.Parameters.Add(prop.Name, GetSqlDbTypeByStruct(prop.PropertyType)).Value = prop.GetValue(entity, null);
+                    if (prop.GetValue(entity) == null)
+                        continue;
+
+                    command.Parameters.Add(prop.Name, GetSqlDbTypeByStruct(prop.PropertyType)).Value = prop.GetValue(entity);
                     fieldNames.Add(prop.Name);
+                }
+            }
+        }
+
+        public static void SetCommandParametersForBulkInsertByEntityValues(T entity, SqlCommand command, List<string> fieldNames, List<string> parameters, bool excludePK = true, int count = 0)
+        {
+            foreach (PropertyInfo prop in entity.GetType().GetProperties())
+            {
+                bool isPrimaryKey = prop.CustomAttributes.Any(x => x.AttributeType == typeof(KeyAttribute));
+
+                if ((isPrimaryKey && !excludePK) || (!isPrimaryKey)
+                    && prop.CustomAttributes.Any(x => x.AttributeType == typeof(ColumnAttribute)))
+                {
+                    if (prop.GetValue(entity) == null)
+                        continue;
+
+                    string propertyName = prop.Name;
+
+                    if (count > 0)
+                    {
+                        propertyName += (count + 1);
+                    }
+
+                    command.Parameters.Add(propertyName, GetSqlDbTypeByStruct(prop.PropertyType)).Value = prop.GetValue(entity);
+
+                    if (!fieldNames.Contains(prop.Name))
+                        fieldNames.Add(prop.Name);
+
+                    parameters.Add(propertyName);
                 }
             }
         }

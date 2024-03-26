@@ -111,7 +111,7 @@ namespace ControleFinanceiro.WebSite.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private IEnumerable<SelectListItem> BuildCreditCardSelectListItem(int? id = null)
+        private List<SelectListItem> BuildCreditCardSelectListItem(int? id = null)
         {
             List<SelectListItem> listItem = [];
 
@@ -123,12 +123,12 @@ namespace ControleFinanceiro.WebSite.Controllers
                 listItem.Add(new SelectListItem(item.Name, item.Id.ToString(), item.Id == id));
             }
 
-            listItem.Insert(0, new SelectListItem("Selecione", 0.ToString(), id == null));
+            listItem.Insert(0, new SelectListItem("Selecione", null, id == null));
 
             return listItem;
         }
 
-        private IEnumerable<SelectListItem> BuildPersonSelectListItem(int? id = null)
+        private List<SelectListItem> BuildPersonSelectListItem(int? id = null)
         {
             List<SelectListItem> listItem = [];
             AppServiceResult<IEnumerable<PersonDTO>> personsDTO = _personAppService.GetAll();
@@ -139,7 +139,7 @@ namespace ControleFinanceiro.WebSite.Controllers
                 listItem.Add(new SelectListItem(item.Name, item.Id.ToString(), item.Id == id));
             }
 
-            listItem.Insert(0, new SelectListItem("Selecione", 0.ToString(), id == null));
+            listItem.Insert(0, new SelectListItem("Selecione", null, id == null));
 
             return listItem;
         }

@@ -9,9 +9,9 @@ namespace ControleFinanceiro.Data.Implementation
     public sealed class ExpenseRepository : BaseRepository<Expense>, IBaseRepository<Expense>
     {
         private readonly IContext _context;
-        private readonly IBaseRepository<ExpenseInstallment> _expenseInstallment;
+        private readonly IExpenseInstallmentRepository _expenseInstallment;
 
-        public ExpenseRepository(IContext context, IBaseRepository<ExpenseInstallment> expenseInstallment) : base (context)
+        public ExpenseRepository(IContext context, IExpenseInstallmentRepository expenseInstallment) : base (context)
         {
             _context = context;
             _expenseInstallment = expenseInstallment;
@@ -44,26 +44,27 @@ namespace ControleFinanceiro.Data.Implementation
 
         public int Insert(Expense entity)
         {
-            return ExecuteInsert(entity);
+            using (var conn = new SqlConnection(_context.GetConnectionString()))
+            {
+                Expense expense = entity;
 
-            //ExecuteInsert(entity);
+                conn.Open();
 
-            //List<ExpenseInstallment> installments = new List<ExpenseInstallment>();
-            //decimal installmentValue = entity.Amount / entity.ParcelQuantity;
+                using (var command = conn.CreateCommand())
+                {
+                    List<string> fieldNames = [];
 
-            //for (int i = 1; i <= entity.ParcelQuantity; i++)
-            //{
-            //    DateTime dueDate = entity.OperationDate;
+                    DataSupport<Expense>.SetCommandParametersForInsertByEntityValues(entity, command, fieldNames);
+                    string sqlInsertExpense = DataSupport<Expense>.GenerateSqlInsert(fieldNames);
 
-            //    if (i > 1)
-            //        dueDate.AddDays(30 * i);
+                    command.CommandText = sqlInsertExpense;
+                    expense.Id = Convert.ToInt32(command.ExecuteScalar() as int?);
 
-            //    installments.Add(new ExpenseInstallment(entity.Id, (short)i, entity.Status, dueDate, installmentValue));
-            //}
+                    _expenseInstallment.InsertByExpense(entity, command);
 
-            //_expenseInstallment.Insert(entity);
-
-            //ExecuteInsert(installments);
+                    return expense.Id;
+                }
+            }
         }
 
         public void Update(Expense entity)
