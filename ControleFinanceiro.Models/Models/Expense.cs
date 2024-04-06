@@ -27,5 +27,6 @@ namespace ControleFinanceiro.Models
         public int? IdCreditCard { get; set; }
         public required Person Person { get; set; }
         public CreditCard? CreditCard { get; set; }
+        public List<ExpenseInstallment>? ExpenseInstallments { get; set; }
     }
 }

@@ -8,7 +8,7 @@ namespace ControleFinanceiro.WebSite.Models
         [DisplayName("Nome")]
         [MinLength(2, ErrorMessage = "Informe ao menos {1} caracteres")]
         [MaxLength(50, ErrorMessage = "Informe no máximo {1} caracteres")]
-        public required string Name { get => name; set => name = value.Trim(); }
+        public required string Name { get => name; set => name = value ?? value.Trim(); }
 
         [DisplayName("Principal")]
         public required bool Main { get; set; }

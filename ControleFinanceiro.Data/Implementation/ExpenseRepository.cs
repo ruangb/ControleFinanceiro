@@ -3,6 +3,7 @@ using ControleFinanceiro.Data.Interfaces;
 using ControleFinanceiro.Models;
 using System.Data.SqlClient;
 using Dapper;
+using System.Linq;
 
 namespace ControleFinanceiro.Data.Implementation
 {
@@ -25,15 +26,24 @@ namespace ControleFinanceiro.Data.Implementation
 
                 var sql = @"SELECT * FROM Expense (NOLOCK) exp
                           INNER JOIN Person per ON exp.IdPerson = per.Id
-                          LEFT JOIN CreditCard cre ON exp.IdCreditCard = cre.Id";
+                          LEFT JOIN CreditCard cre ON exp.IdCreditCard = cre.Id
+                          INNER JOIN ExpenseInstallment ei ON exp.Id = ei.IdExpense";
 
-                var expenses = conn.Query<Expense, Person, CreditCard, Expense>(sql, (expense, person, creditCard) => {
+                var expenses = conn.Query<Expense, Person, CreditCard, ExpenseInstallment, Expense>(sql, (expense, person, creditCard, expenseInstallment) => {
                     expense.Person = person;
                     expense.CreditCard = creditCard;
+                    expense.ExpenseInstallments = [expenseInstallment];
                     return expense;
+                }, splitOn: "Id, Id, Id, IdExpense");
+
+                var result = expenses.GroupBy(e => e.Id).Select(g =>
+                {
+                    var exp = g.First();
+                    exp.ExpenseInstallments = g.Select(e => e.ExpenseInstallments.Single()).ToList();
+                    return exp;
                 });
 
-                return expenses;
+                return result.ToList();
             }
         }
 
@@ -46,23 +56,31 @@ namespace ControleFinanceiro.Data.Implementation
         {
             using (var conn = new SqlConnection(_context.GetConnectionString()))
             {
-                Expense expense = entity;
-
                 conn.Open();
+                SqlTransaction tran = conn.BeginTransaction();
 
-                using (var command = conn.CreateCommand())
+                try
                 {
-                    List<string> fieldNames = [];
+                    using (var command = conn.CreateCommand())
+                    {
+                        List<string> fieldNames = [];
+                        DataSupport<Expense>.SetCommandParametersForInsertByEntityValues(entity, command, fieldNames);
+                        string sqlInsertExpense = DataSupport<Expense>.GenerateSqlInsert(fieldNames);
 
-                    DataSupport<Expense>.SetCommandParametersForInsertByEntityValues(entity, command, fieldNames);
-                    string sqlInsertExpense = DataSupport<Expense>.GenerateSqlInsert(fieldNames);
+                        command.CommandText = sqlInsertExpense;
+                        entity.Id = Convert.ToInt32(command.ExecuteScalar() as int?);
 
-                    command.CommandText = sqlInsertExpense;
-                    expense.Id = Convert.ToInt32(command.ExecuteScalar() as int?);
+                        _expenseInstallment.InsertByExpense(entity, command);
 
-                    _expenseInstallment.InsertByExpense(entity, command);
+                        tran.Commit();
 
-                    return expense.Id;
+                        return entity.Id;
+                    }
+                }
+                catch (Exception)
+                {
+                    tran.Rollback();
+                    throw;
                 }
             }
         }
