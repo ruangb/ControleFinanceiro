@@ -1,0 +1,76 @@
+﻿@model ControleFinanceiro.WebSite.Models.ExpenseViewModel
+@using ControleFinanceiro.CrossCutting.Utilities;
+@{
+    ViewData["Title"] = $"Novo {ExpenseViewModel.ObjectName}";
+}
+
+<h4>Criar @ExpenseViewModel.ObjectName</h4>
+
+<hr />
+<div class="row">
+    <div class="col-md-6 offset-md-3">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <label asp-for="Status" class="control-label"></label>
+                    <select asp-for="Status" asp-items="@ViewBag.Status" class="form-control">
+                    </select>
+                    <span asp-validation-for="Status" class="text-danger"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="OperationDate" class="control-label"></label>
+                    <input asp-for="OperationDate" class="form-control" />
+                    <span asp-validation-for="OperationDate" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <label asp-for="Description" class="control-label"></label>
+                    <input asp-for="Description" class="form-control" />
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-3">
+                    <label asp-for="Amount" class="control-label"></label>
+                    <input asp-for="Amount" class="form-control" />
+                    <span asp-validation-for="Amount" class="text-danger"></span>
+                </div>
+                <div class="col-md-5">
+                    <label asp-for="ParcelQuantity" class="control-label"></label>
+                    <input asp-for="ParcelQuantity" class="form-control" />
+                    <span asp-validation-for="ParcelQuantity" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <label asp-for="IdPerson" class="control-label"></label>
+                    <select asp-for="IdPerson" asp-items="@ViewBag.Persons" class="form-control"></select>
+                    <span asp-validation-for="IdPerson" class="text-danger"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="IdCreditCard" class="control-label"></label>
+                    <select asp-for="IdCreditCard" asp-items="@ViewBag.CreditCards" class="form-control"></select>
+                    <span asp-validation-for="IdCreditCard" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="form-group my-2">
+                <input type="submit" value="Salvar" class="btn btn-success" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index" class="float-end">Voltar à lista</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

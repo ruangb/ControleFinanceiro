@@ -6,6 +6,7 @@ namespace ControleFinanceiro.Data.Interfaces
     public interface IExpenseInstallmentRepository
     {
         IEnumerable<ExpenseInstallment> GetAll();
+        IEnumerable<Expense> GetAllExpenses();
         ExpenseInstallment GetById(int id);
         int Insert(ExpenseInstallment entity);
         void InsertByExpense(Expense entity, SqlCommand command);

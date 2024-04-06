@@ -26,24 +26,15 @@ namespace ControleFinanceiro.Data.Implementation
 
                 var sql = @"SELECT * FROM Expense (NOLOCK) exp
                           INNER JOIN Person per ON exp.IdPerson = per.Id
-                          LEFT JOIN CreditCard cre ON exp.IdCreditCard = cre.Id
-                          INNER JOIN ExpenseInstallment ei ON exp.Id = ei.IdExpense";
+                          LEFT JOIN CreditCard cre ON exp.IdCreditCard = cre.Id";
 
-                var expenses = conn.Query<Expense, Person, CreditCard, ExpenseInstallment, Expense>(sql, (expense, person, creditCard, expenseInstallment) => {
+                var expenses = conn.Query<Expense, Person, CreditCard, Expense>(sql, (expense, person, creditCard) => {
                     expense.Person = person;
                     expense.CreditCard = creditCard;
-                    expense.ExpenseInstallments = [expenseInstallment];
                     return expense;
-                }, splitOn: "Id, Id, Id, IdExpense");
-
-                var result = expenses.GroupBy(e => e.Id).Select(g =>
-                {
-                    var exp = g.First();
-                    exp.ExpenseInstallments = g.Select(e => e.ExpenseInstallments.Single()).ToList();
-                    return exp;
                 });
 
-                return result.ToList();
+                return expenses;
             }
         }
 
