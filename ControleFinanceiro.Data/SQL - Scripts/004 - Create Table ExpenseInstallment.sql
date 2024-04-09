@@ -4,5 +4,5 @@ CREATE TABLE ControleFinanceiro..ExpenseInstallment
 ,[Status] NVARCHAR(40) NOT NULL
 ,DueDate DATETIME NOT NULL
 ,[Value] DECIMAL(10,2) NOT NULL
-,FOREIGN KEY (IdExpense) REFERENCES Expense(Id)
+,FOREIGN KEY (IdExpense) REFERENCES Expense(Id) ON DELETE CASCADE
 ,PRIMARY KEY CLUSTERED (IdExpense, Installment))

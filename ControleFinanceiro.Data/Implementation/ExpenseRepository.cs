@@ -4,6 +4,9 @@ using ControleFinanceiro.Models;
 using System.Data.SqlClient;
 using Dapper;
 using System.Linq;
+using System.Data;
+using System.Reflection.PortableExecutable;
+using System.Xml;
 
 namespace ControleFinanceiro.Data.Implementation
 {
@@ -59,7 +62,13 @@ namespace ControleFinanceiro.Data.Implementation
                         string sqlInsertExpense = DataSupport<Expense>.GenerateSqlInsert(fieldNames);
 
                         command.CommandText = sqlInsertExpense;
-                        entity.Id = Convert.ToInt32(command.ExecuteScalar() as int?);
+                        command.Transaction = tran;
+                        SqlDataReader reader = command.ExecuteReader();
+  
+                        while (reader.Read())
+                        {
+                            entity.Id = reader.GetInt32(0);
+                        }
 
                         _expenseInstallment.InsertByExpense(entity, command);
 
