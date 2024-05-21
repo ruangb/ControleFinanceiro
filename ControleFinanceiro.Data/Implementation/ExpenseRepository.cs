@@ -3,10 +3,6 @@ using ControleFinanceiro.Data.Interfaces;
 using ControleFinanceiro.Models;
 using System.Data.SqlClient;
 using Dapper;
-using System.Linq;
-using System.Data;
-using System.Reflection.PortableExecutable;
-using System.Xml;
 
 namespace ControleFinanceiro.Data.Implementation
 {

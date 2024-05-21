@@ -74,6 +74,10 @@ namespace ControleFinanceiro.Application.Implementation
             try
             {
                 var entity = _mapper.Map<Expense>(dto);
+
+                if (entity.OperationDate < new DateTime(1753, 01, 01))
+                    entity.OperationDate =  new DateTime(1753, 01, 01);
+
                 _baseManager.Update(entity);
                 result.BuildSucessResult();
             }

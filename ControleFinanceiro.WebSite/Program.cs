@@ -73,17 +73,15 @@ app.MapControllerRoute(
 var ptBRCulture = new CultureInfo("pt-BR");
 var localizationOptions = new RequestLocalizationOptions()
 {
-    SupportedCultures = new List<CultureInfo>()
-    {
+    SupportedCultures =
+    [
         ptBRCulture
-    },
-    SupportedUICultures = new List<CultureInfo>()
-    {
+    ],
+    SupportedUICultures =
+    [
         ptBRCulture
-    },
-    DefaultRequestCulture = new RequestCulture(ptBRCulture),
-    FallBackToParentCultures = false,
-    FallBackToParentUICultures = false
+    ],
+    DefaultRequestCulture = new RequestCulture(ptBRCulture, ptBRCulture),
 };
 
 app.UseRequestLocalization(localizationOptions);

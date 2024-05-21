@@ -20,6 +20,8 @@ namespace ControleFinanceiro.WebSite.Models
         [DisplayName("Valor")]
         //[DisplayFormat(DataFormatString = "{0,##}")]
         [DeniedValues(0, ErrorMessage = "O valor não pode ser zero")]
+        [DisplayFormat(DataFormatString = "{0:N2}")]
+        [DataType(DataType.Currency)]
         public decimal Amount { get; set; }
 
         [DisplayName("Quantidade de Parcelas")]
