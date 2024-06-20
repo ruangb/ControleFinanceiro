@@ -1,16 +1,20 @@
 ﻿using ControleFinanceiro.Domain.Manager.Interfaces;
 using ControleFinanceiro.Data.Interfaces;
 using ControleFinanceiro.Models;
+using AutoMapper;
+using ControleFinanceiro.CrossCutting.DTO;
 
 namespace ControleFinanceiro.Domain.Manager.Implementation
 {
     public sealed class ExpenseManager : IBaseManager<Expense>
     {
         private readonly IBaseRepository<Expense> _baseRepository;
+        private readonly IMapper _mapper;
 
-        public ExpenseManager(IBaseRepository<Expense> baseRepository)
+        public ExpenseManager(IBaseRepository<Expense> baseRepository, IMapper mapper)
         {
             _baseRepository = baseRepository;
+            _mapper = mapper;
         }
 
         public IEnumerable<Expense> GetAll()

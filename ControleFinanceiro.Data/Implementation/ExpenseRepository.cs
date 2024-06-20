@@ -11,12 +11,12 @@ namespace ControleFinanceiro.Data.Implementation
     public sealed class ExpenseRepository : BaseRepository<Expense>, IBaseRepository<Expense>
     {
         private readonly IContext _context;
-        private readonly IExpenseInstallmentRepository _expenseInstallment;
+        private readonly IExpenseInstallmentRepository _expenseInstallmentRepository;
 
-        public ExpenseRepository(IContext context, IExpenseInstallmentRepository expenseInstallment) : base (context)
+        public ExpenseRepository(IContext context, IExpenseInstallmentRepository expenseInstallmentRepository) : base (context)
         {
             _context = context;
-            _expenseInstallment = expenseInstallment;
+            _expenseInstallmentRepository = expenseInstallmentRepository;
         }
 
         public IEnumerable<Expense> GetAll()
@@ -44,45 +44,6 @@ namespace ControleFinanceiro.Data.Implementation
             return ExecuteGetById(id);
         }
 
-        //public int Insert(Expense entity)
-        //{
-        //    using (var conn = new SqlConnection(_context.GetConnectionString()))
-        //    {
-        //        conn.Open();
-        //        SqlTransaction tran = conn.BeginTransaction();
-
-        //        try
-        //        {
-        //            using (var command = conn.CreateCommand())
-        //            {
-        //                List<string> fieldNames = [];
-        //                DataSupport<Expense>.SetCommandParametersForInsertByEntityValues(entity, command, fieldNames);
-        //                string sqlInsertExpense = DataSupport<Expense>.GenerateSqlInsert(fieldNames);
-
-        //                command.CommandText = sqlInsertExpense;
-        //                command.Transaction = tran;
-        //                SqlDataReader reader = command.ExecuteReader();
-  
-        //                while (reader.Read())
-        //                {
-        //                    entity.Id = reader.GetInt32(0);
-        //                }
-
-        //                _expenseInstallment.InsertByExpense(entity, command);
-
-        //                tran.Commit();
-
-        //                return entity.Id;
-        //            }
-        //        }
-        //        catch (Exception)
-        //        {
-        //            tran.Rollback();
-        //            throw;
-        //        }
-        //    }
-        //}
-
         public int Insert(Expense entity)
         {
             int id;
@@ -92,7 +53,6 @@ namespace ControleFinanceiro.Data.Implementation
                 using (var conn = new SqlConnection(_context.GetConnectionString()))
                 {
                     conn.Open();
-                    //SqlTransaction tran = conn.BeginTransaction();
 
                     using (var command = conn.CreateCommand())
                     {
@@ -103,27 +63,9 @@ namespace ControleFinanceiro.Data.Implementation
                         command.CommandText = DataSupport<Expense>.GenerateSqlInsert(fieldNames);
 
                         id = (int)command.ExecuteScalar();
-                        //tran.Commit();
                     }
 
-                    decimal parcelValue = entity.Amount / entity.ParcelQuantity;
-
-                    for (int i = 1; i <= entity.ParcelQuantity; i++)
-                    {
-                        var result = conn.ExecuteReader("PRC_SAVE_EXPENSE_INSTALLMENT",
-                            new
-                            {
-                                N_ID = 0,
-                                N_ID_CREDIT_CARD = entity.IdCreditCard,
-                                N_ID_EXPENSE = id,
-                                N_INSTALLMENT = i,
-                                S_STATUS = entity.Status,
-                                D_REFERENCE_DATE = entity.OperationDate.AddMonths(i - 1),
-                                N_VALUE = parcelValue,
-                                RESULT = "",
-                                RESULT_MESS = 0,
-                            }, commandType: CommandType.StoredProcedure);
-                    }
+                    ExecuteProcSaveInstallment(id, entity, conn);
 
                     tranScope.Complete();
                 }
@@ -134,12 +76,55 @@ namespace ControleFinanceiro.Data.Implementation
 
         public void Update(Expense entity)
         {
-            ExecuteUpdate(entity.Id, entity);
+            using (var tranScope = new TransactionScope())
+            {
+                ExecuteUpdate(entity.Id, entity);
+
+                using (var conn = new SqlConnection(_context.GetConnectionString()))
+                {
+                    conn.Open();
+
+                    ExecuteProcSaveInstallment(entity.Id, entity, conn, true);
+                }
+                
+                tranScope.Complete();
+            }
         }
 
         public void Delete(int id)
         {
             ExecuteDelete(id);
+        }
+
+        private void ExecuteProcSaveInstallment(int idExpense, Expense entity, SqlConnection conn, bool isUpdate = false)
+        {
+            decimal parcelValue = entity.Amount / entity.ParcelQuantity;
+            IEnumerable<ExpenseInstallment> installments = [];
+
+            if (isUpdate)
+                installments = _expenseInstallmentRepository.GetByExpenseId(entity.Id, conn);
+
+            for (int i = 1; i <= entity.ParcelQuantity; i++)
+            {
+                int id = 0;
+
+                if (isUpdate)
+                    id = installments.Where(x => x.Installment == i).Select(x => x.Id).FirstOrDefault();
+
+                conn.ExecuteReader("PRC_SAVE_EXPENSE_INSTALLMENT",
+                    new
+                    {
+                        N_ID = id,
+                        N_ID_CREDIT_CARD = entity.IdCreditCard,
+                        N_ID_EXPENSE = idExpense,
+                        N_INSTALLMENT = i,
+                        S_STATUS = entity.Status,
+                        D_REFERENCE_DATE = entity.OperationDate.AddMonths(i - 1),
+                        N_VALUE = parcelValue,
+                        RESULT = "",
+                        RESULT_MESS = 0,
+                    }, commandType: CommandType.StoredProcedure);
+            }
         }
     }
 }

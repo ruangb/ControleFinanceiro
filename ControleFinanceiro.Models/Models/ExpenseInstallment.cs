@@ -7,27 +7,40 @@ namespace ControleFinanceiro.Models
     public class ExpenseInstallment
     {
         [Key]
+        [Required]
+        public int Id { get; set; }
+
         [Column]
         [Required]
         [ForeignKey("IdExpense")]
         public int IdExpense { get; set; }
+
         [Column]
-        [ForeignKey("Installment")]
+        [Required]
+        [ForeignKey("IdBill")]
+        public int IdBill { get; set; }
+
+        [Column]
         public short Installment { get; set; }
+
         [Column]
         public string Status { get; set; }
+
         [Column]
-        public DateTime DueDate { get; set; }
+        public DateTime ReferenceDate { get; set; }
+
         [Column]
         public decimal Value { get; set; }
-        public Expense Expense { get; set; }
 
-        public ExpenseInstallment(int idExpense, short installment, string status, DateTime dueDate, decimal value)
+        public Expense? Expense { get; set; }
+
+        public ExpenseInstallment(int id, int idExpense, short installment, string status, DateTime referenceDate, decimal value)
         {
+            Id = id;
             IdExpense = idExpense;
             Installment = installment;
             Status = status;
-            DueDate = dueDate;
+            ReferenceDate = referenceDate;
             Value = value;
         }
 

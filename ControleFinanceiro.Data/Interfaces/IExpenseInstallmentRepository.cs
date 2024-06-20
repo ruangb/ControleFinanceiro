@@ -8,8 +8,8 @@ namespace ControleFinanceiro.Data.Interfaces
         IEnumerable<ExpenseInstallment> GetAll();
         IEnumerable<Expense> GetAllExpenses();
         ExpenseInstallment GetById(int id);
+        IEnumerable<ExpenseInstallment> GetByExpenseId(int expenseId, SqlConnection conn);
         int Insert(ExpenseInstallment entity);
-        void InsertByExpense(Expense entity, SqlCommand command);
         void Update(ExpenseInstallment entity);
         void Delete(int id);
     }

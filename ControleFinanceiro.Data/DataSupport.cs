@@ -4,6 +4,7 @@ using System.Data;
 using System.Reflection;
 using System.ComponentModel.DataAnnotations.Schema;
 using ControleFinanceiro.CrossCutting.Utilities;
+using System.ComponentModel;
 
 namespace ControleFinanceiro.Data
 {
@@ -71,10 +72,12 @@ namespace ControleFinanceiro.Data
         public static string SetCommandParametersForUpdateByEntityValues(T entity, SqlCommand command)
         {
             string sql = string.Empty;
+
             foreach (PropertyInfo prop in entity.GetType().GetProperties())
-            {
+            {   
                 if (!prop.CustomAttributes.Any(x => x.AttributeType == typeof(KeyAttribute))
-                    && prop.CustomAttributes.Any(x => x.AttributeType == typeof(ColumnAttribute)))
+                    && prop.CustomAttributes.Any(x => x.AttributeType == typeof(ColumnAttribute))
+                    && !prop.CustomAttributes.Any(x => x.AttributeType == typeof(ReadOnlyAttribute)))
                 {
                     sql += $"{prop.Name} = @{prop.Name},";
                     command.Parameters.Add(prop.Name, GetSqlDbTypeByStruct(prop.PropertyType)).Value = prop.GetValue(entity, null);
