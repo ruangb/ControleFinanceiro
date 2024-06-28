@@ -26,6 +26,8 @@ var mapperConfig = new MapperConfiguration(m => {
     m.CreateMap<ExpenseDTO, Expense>().ReverseMap();
     m.CreateMap<ExpenseInstallmentDTO, ExpenseInstallmentViewModel>().ReverseMap();
     m.CreateMap<ExpenseInstallmentDTO, ExpenseInstallment>().ReverseMap();
+    m.CreateMap<BillDTO, BillViewModel>().ReverseMap();
+    m.CreateMap<BillDTO, Bill>().ReverseMap();
 });
 
 IMapper mapper = mapperConfig.CreateMapper();
@@ -48,6 +50,10 @@ builder.Services.AddScoped<IBaseAppService<ExpenseDTO>, ExpenseAppService>();
 builder.Services.AddScoped<IExpenseInstallmentRepository, ExpenseInstallmentRepository>();
 builder.Services.AddScoped<IExpenseInstallmentManager, ExpenseInstallmentManager>();
 builder.Services.AddScoped<IExpenseInstallmentAppService, ExpenseInstallmentAppService>();
+
+builder.Services.AddScoped<IBillRepository, BillRepository>();
+builder.Services.AddScoped<IBillManager, BillManager>();
+builder.Services.AddScoped<IBillAppService, BillAppService>();
 
 var app = builder.Build();
 

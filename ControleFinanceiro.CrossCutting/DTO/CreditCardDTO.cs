@@ -2,9 +2,8 @@
 
 namespace ControleFinanceiro.CrossCutting.DTO
 {
-    public class CreditCardDTO
+    public class CreditCardDTO : BaseDTO
     {
-        public int Id { get; set; }
         public required string Name { get; set; }
         public required short DueDay { get; set; }
         public required short ClosingDays { get; set; }

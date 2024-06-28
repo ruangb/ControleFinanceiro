@@ -1,8 +1,7 @@
 ﻿namespace ControleFinanceiro.CrossCutting.DTO
 {
-    public class ExpenseDTO
+    public class ExpenseDTO : BaseDTO
     {
-        public int Id { get; set; }
         public required string Status { get; set; }
         public DateTime OperationDate { get; set; }
         public required string Description { get; set; }

@@ -1,0 +1,75 @@
+﻿@model IEnumerable<ControleFinanceiro.WebSite.Models.BillViewModel>
+
+@{
+    ViewData["Title"] = BillViewModel.ObjectNamePlural;
+}
+
+<div>
+    <h4 class="float-start">@BillViewModel.ObjectNamePlural</h4>
+
+    <p class="float-end">
+        <a asp-action="Create" class="btn btn-success">@($"Nov{BillViewModel.Pronoun} {BillViewModel.ObjectName}")</a>
+    </p>
+</div>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DueDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Value)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreditCard.Name)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr id="tr-@item.Id">
+                <td>
+                    @Html.DisplayFor(modelItem => item.Status)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DueDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Value)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreditCard.Name)
+                </td>
+                <td style="text-align: end">
+                    @* @Html.ActionLink("Editar", "Edit", new { id = item.Id }, new { @class = "btn btn-warning" }) *@
+                    <button type="button" class="btn btn-primary" onclick="showDetails(@item.Id)">+ Detalhes</button>
+                    @* @Html.ActionLink("Excluir", "Delete", new { id = item.Id }, new { @class = "btn btn-danger" }) *@
+                </td>
+                <td id="tdDetails-@item.Id" class="d-none">
+                    <tr>
+                        <td></td>
+                    </tr>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<script type="text/javascript">
+
+function showDetails(id) {
+    debugger;
+    console.log('chamou função');
+    var tr = document.getElementById("tr-" + id);
+    var tdDetail = document.getElementById("tdDetails-" + id);
+    tdDetail.append('teste');
+    $("tdDetails-" + id).show();
+    tdDetail.classList.remove("d-none");
+}    
+
+</script>
