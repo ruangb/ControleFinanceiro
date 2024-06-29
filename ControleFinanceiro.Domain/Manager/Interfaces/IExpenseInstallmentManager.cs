@@ -1,5 +1,4 @@
-﻿using ControleFinanceiro.CrossCutting.DTO;
-using ControleFinanceiro.Models;
+﻿using ControleFinanceiro.Models;
 
 namespace ControleFinanceiro.Domain.Manager.Interfaces
 {
@@ -7,6 +6,7 @@ namespace ControleFinanceiro.Domain.Manager.Interfaces
     {
         IEnumerable<ExpenseInstallment> GetAll();
         IEnumerable<Expense> GetAllExpenses();
+        IEnumerable<ExpenseInstallment> GetAllExpenseInstallmentsByBill(int billId);
         ExpenseInstallment GetById(int id);
         int Insert(ExpenseInstallment obj);
         void Update(ExpenseInstallment obj);

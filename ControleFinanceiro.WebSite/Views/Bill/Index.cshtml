@@ -11,6 +11,10 @@
         <a asp-action="Create" class="btn btn-success">@($"Nov{BillViewModel.Pronoun} {BillViewModel.ObjectName}")</a>
     </p>
 </div>
+
+<div id="teste">
+
+</div>
 <table class="table">
     <thead>
         <tr>
@@ -50,11 +54,8 @@
                     <button type="button" class="btn btn-primary" onclick="showDetails(@item.Id)">+ Detalhes</button>
                     @* @Html.ActionLink("Excluir", "Delete", new { id = item.Id }, new { @class = "btn btn-danger" }) *@
                 </td>
-                <td id="tdDetails-@item.Id" class="d-none">
-                    <tr>
-                        <td></td>
-                    </tr>
-                </td>
+                <tr id="trDetails-@item.Id" class="d-none">
+                </tr>
             </tr>
         }
     </tbody>
@@ -64,12 +65,31 @@
 
 function showDetails(id) {
     debugger;
-    console.log('chamou função');
-    var tr = document.getElementById("tr-" + id);
-    var tdDetail = document.getElementById("tdDetails-" + id);
-    tdDetail.append('teste');
-    $("tdDetails-" + id).show();
-    tdDetail.classList.remove("d-none");
+    // console.log('chamou função');
+    // var tr = document.getElementById("tr-" + id);
+    // tdDetail.append('teste');
+    // $("tdDetails-" + id).show();
+
+    $.ajax({
+        url: '@Url.Content("~/bill/list-items")/' + id,
+        type: "GET",
+        success: function (result) {
+            debugger;
+            if (result.success){
+                var tdDetail = document.getElementById("trDetails-" + id);
+                tdDetail.classList.remove("d-none");
+                $("#trDetails-" + id).append(result.content);
+            }
+            else
+            {
+                alert(result.message);
+            }
+        },
+        error: function (e) {
+            debugger;
+            alert(e.Message);
+        }
+    });
 }    
 
 </script>

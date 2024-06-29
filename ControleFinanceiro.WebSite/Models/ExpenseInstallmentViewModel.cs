@@ -8,6 +8,9 @@ namespace ControleFinanceiro.WebSite.Models
         [DisplayName("Despesa")]
         public required int IdExpense { get; set; }
 
+        [DisplayName("Fatura")]
+        public int IdBill { get; set; }
+
         [DisplayName("Parcela")]
         public short Installment { get; set; }
 
@@ -20,8 +23,8 @@ namespace ControleFinanceiro.WebSite.Models
 
         [DisplayName("Valor")]
         public decimal Value { get; set; }
-
         public required ExpenseViewModel Expense { get; set; }
+        public required BillViewModel Bill { get; set; }
 
         #region Text Properties
         public static string? ObjectName { get => "Parcela da Despesa"; }

@@ -10,12 +10,12 @@ namespace ControleFinanceiro.Models
         [Key]
         public int Id { get; set; }
         [Column]
-        public required string Status { get; set; }
+        public string Status { get; set; }
         [Column]
         [ReadOnly(true)]
         public DateTime OperationDate { get; set; }
         [Column]
-        public required string Description { get; set; }
+        public string Description { get; set; }
         [Column]
         public decimal Amount { get; set; }
         [Column]
@@ -29,7 +29,7 @@ namespace ControleFinanceiro.Models
         [ForeignKey("IdCreditCard")]
         [ReadOnly(true)]
         public int? IdCreditCard { get; set; }
-        public required Person Person { get; set; }
+        public Person Person { get; set; }
         public CreditCard? CreditCard { get; set; }
         public List<ExpenseInstallment>? ExpenseInstallments { get; set; }
     }

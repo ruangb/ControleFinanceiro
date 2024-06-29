@@ -3,18 +3,25 @@ using ControleFinanceiro.Application.Interfaces;
 using ControleFinanceiro.CrossCutting;
 using ControleFinanceiro.CrossCutting.DTO;
 using ControleFinanceiro.WebSite.Models;
+using ControleFinanceiro.WebSite;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Primitives;
+using System.Text;
+using NuGet.Protocol;
 
 namespace ControleFinanceiro.WebSite.Controllers
 {
+    //[Route("bill")]
     public class BillController : BaseController
     {
         private readonly IBillAppService _billAppService;
+        private readonly IExpenseInstallmentAppService _expenseInstallmentAppService;
         private readonly IMapper _mapper;
 
-        public BillController(IBillAppService billAppService, IMapper mapper)
+        public BillController(IBillAppService billAppService, IExpenseInstallmentAppService expenseInstallmentAppService, IMapper mapper)
         {
             _billAppService = billAppService;
+            _expenseInstallmentAppService = expenseInstallmentAppService;
             _mapper = mapper;
         }
 
@@ -24,10 +31,70 @@ namespace ControleFinanceiro.WebSite.Controllers
 
             if (!result.Success) return RedirectToError(result.Message);
 
-            var Models = _mapper.Map<IList<BillViewModel>>(result.Model);
+            var model = _mapper.Map<IList<BillViewModel>>(result.Model);
 
-            return View(Models);
+            return View(model);
         }
+
+        [HttpGet]
+        [Route("bill/list-items/{billId}")]
+        public IActionResult GetExpenseInstallmentsByBill(int billId)
+        {
+            AppServiceResult<IEnumerable<ExpenseInstallmentDTO>> result = _expenseInstallmentAppService.GetAllExpenseInstallmentsByBill(billId);
+
+            if (!result.Success) return RedirectToErrorJson(result.Message);
+
+            var model = _mapper.Map<IList<ExpenseInstallmentViewModel>>(result.Model);
+
+            string detailsHtml = this.RenderViewAsync("_Details", model, true).Result;
+
+            return Json(new JsonResultViewModel(true, detailsHtml));
+        }
+
+        static string RenderViewToString(System.Web.Mvc.ControllerContext context,
+  string viewPath, object model = null, bool partial = false)
+        {
+            // first find the ViewEngine for this view
+            System.Web.Mvc.ViewEngineResult viewEngineResult = null;
+            if (partial)
+                viewEngineResult = System.Web.Mvc.ViewEngines.Engines.FindPartialView(context, viewPath);
+            else
+                viewEngineResult = System.Web.Mvc.ViewEngines.Engines.FindView(context, viewPath, null);
+
+            if (viewEngineResult == null)
+                throw new FileNotFoundException("View cannot be found.");
+
+            // get the view and attach the model to view data
+            var view = viewEngineResult.View;
+            context.Controller.ViewData.Model = model;
+
+            string result = null;
+
+            using (var sw = new StringWriter())
+            {
+                var ctx = new System.Web.Mvc.ViewContext(context, view, context.Controller.ViewData, context.Controller.TempData, sw);
+                view.Render(ctx, sw);
+                result = sw.ToString();
+            }
+
+            return result;
+        }
+
+        //private string BuildDetailsHtml(IList<ExpenseInstallmentViewModel> installments)
+        //{
+        //    StringBuilder str = new StringBuilder();
+
+        //    foreach (var inst in installments)
+        //    {
+        //        str.Append("<tr>");
+        //        str.Append("<td>");
+
+        //        str.Append($"");
+
+        //        str.Append("</tr>");
+        //        str.Append("</td>");
+        //    }
+        //}
 
         public IActionResult Create()
         {

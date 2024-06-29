@@ -49,6 +49,28 @@ namespace ControleFinanceiro.Data.Implementation
             }
         }
 
+        public IEnumerable<ExpenseInstallment> GetAllExpenseInstallmentsByBill(int billId)
+        {
+            using (var conn = new SqlConnection(_context.GetConnectionString()))
+            {
+                conn.Open();
+
+                var sql = @$"SELECT ei.*, c.Name, p.Name FROM ExpenseInstallment (NOLOCK) ei
+                             INNER JOIN Bill (NOLOCK) b ON ei.IdBill = b.Id
+                             INNER JOIN CreditCard (NOLOCK) c ON b.IdCreditCard = c.Id
+                             INNER JOIN Expense (NOLOCK) e ON ei.IdExpense = e.Id
+                             INNER JOIN Person (NOLOCK) p ON e.IdPerson = p.Id
+                             WHERE b.Id = {billId}";
+
+                var expenseInstallments = conn.Query<ExpenseInstallment, CreditCard, Person, ExpenseInstallment>(sql, (expenseInsallment, creditCard, person) => {
+                    expenseInsallment.Expense = new Expense() { CreditCard = creditCard, Person = person };
+                    return expenseInsallment;
+                }, splitOn: "Name, Name");
+
+                return expenseInstallments;
+            }
+        }
+
         public ExpenseInstallment GetById(int id)
         {
             return ExecuteGetById(id);

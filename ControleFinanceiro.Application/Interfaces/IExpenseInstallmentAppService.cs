@@ -8,6 +8,7 @@ namespace ControleFinanceiro.Application.Interfaces
         AppServiceResult<IEnumerable<ExpenseInstallmentDTO>> GetAll();
         AppServiceResult<IEnumerable<ExpenseDTO>> GetAllExpenses();
         AppServiceResult<ExpenseInstallmentDTO> GetById(int id);
+        AppServiceResult<IEnumerable<ExpenseInstallmentDTO>> GetAllExpenseInstallmentsByBill(int billId);
         AppServiceResult<int> Insert(ExpenseInstallmentDTO obj);
         AppServiceBaseResult Update(ExpenseInstallmentDTO obj);
         AppServiceBaseResult Delete(int id);

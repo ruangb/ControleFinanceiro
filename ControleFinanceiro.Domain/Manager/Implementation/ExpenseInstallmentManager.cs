@@ -23,6 +23,11 @@ namespace ControleFinanceiro.Domain.Manager.Implementation
             return _expenseInstallmentRepository.GetAllExpenses();
         }
 
+        public IEnumerable<ExpenseInstallment> GetAllExpenseInstallmentsByBill(int billId)
+        {
+            return _expenseInstallmentRepository.GetAllExpenseInstallmentsByBill(billId);
+        }
+
         public ExpenseInstallment GetById(int id)
         {
             return _expenseInstallmentRepository.GetById(id);

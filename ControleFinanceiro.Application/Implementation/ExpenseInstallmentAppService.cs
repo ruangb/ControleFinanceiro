@@ -2,19 +2,19 @@
 using ControleFinanceiro.Application.Interfaces;
 using ControleFinanceiro.CrossCutting;
 using ControleFinanceiro.CrossCutting.DTO;
-using ControleFinanceiro.Data.Interfaces;
+using ControleFinanceiro.Domain.Manager.Interfaces;
 using ControleFinanceiro.Models;
 
 namespace ControleFinanceiro.Application.Implementation
 {
     public sealed class ExpenseInstallmentAppService : IExpenseInstallmentAppService
     {
-        private readonly IExpenseInstallmentRepository _expenseInstallmentRepository;
+        private readonly IExpenseInstallmentManager _expenseInstallmentManager;
         private readonly IMapper _mapper;
 
-        public ExpenseInstallmentAppService(IExpenseInstallmentRepository expenseInstallmentRepository, IMapper mapper)
+        public ExpenseInstallmentAppService(IExpenseInstallmentManager expenseInstallmentManager, IMapper mapper)
         {
-            _expenseInstallmentRepository = expenseInstallmentRepository;
+            _expenseInstallmentManager = expenseInstallmentManager;
             _mapper = mapper;
         }
 
@@ -24,7 +24,7 @@ namespace ControleFinanceiro.Application.Implementation
 
             try
             {
-                result.BuildSucessResult(_mapper.Map<IEnumerable<ExpenseInstallmentDTO>>(_expenseInstallmentRepository.GetAll()));
+                result.BuildSucessResult(_mapper.Map<IEnumerable<ExpenseInstallmentDTO>>(_expenseInstallmentManager.GetAll()));
             }
             catch (Exception ex)
             {
@@ -40,7 +40,23 @@ namespace ControleFinanceiro.Application.Implementation
 
             try
             {
-                result.BuildSucessResult(_mapper.Map<IEnumerable<ExpenseDTO>>(_expenseInstallmentRepository.GetAllExpenses()));
+                result.BuildSucessResult(_mapper.Map<IEnumerable<ExpenseDTO>>(_expenseInstallmentManager.GetAllExpenses()));
+            }
+            catch (Exception ex)
+            {
+                result.BuildErrorResult(ex);
+            }
+
+            return result;
+        }
+
+        public AppServiceResult<IEnumerable<ExpenseInstallmentDTO>> GetAllExpenseInstallmentsByBill(int billId)
+        {
+            AppServiceResult<IEnumerable<ExpenseInstallmentDTO>> result = new();
+
+            try
+            {
+                result.BuildSucessResult(_mapper.Map<IEnumerable<ExpenseInstallmentDTO>>(_expenseInstallmentManager.GetAllExpenseInstallmentsByBill(billId)));
             }
             catch (Exception ex)
             {
@@ -56,7 +72,7 @@ namespace ControleFinanceiro.Application.Implementation
 
             try
             {
-                result.BuildSucessResult(_mapper.Map<ExpenseInstallmentDTO>(_expenseInstallmentRepository.GetById(id)));
+                result.BuildSucessResult(_mapper.Map<ExpenseInstallmentDTO>(_expenseInstallmentManager.GetById(id)));
             }
             catch (Exception ex)
             {
@@ -73,7 +89,7 @@ namespace ControleFinanceiro.Application.Implementation
             try
             {
                 var entity = _mapper.Map<ExpenseInstallment>(dto);
-                result.BuildSucessResult(_expenseInstallmentRepository.Insert(entity));
+                result.BuildSucessResult(_expenseInstallmentManager.Insert(entity));
             }
             catch (Exception ex)
             {
@@ -90,7 +106,7 @@ namespace ControleFinanceiro.Application.Implementation
             try
             {
                 var entity = _mapper.Map<ExpenseInstallment>(dto);
-                _expenseInstallmentRepository.Update(entity);
+                _expenseInstallmentManager.Update(entity);
                 result.BuildSucessResult();
             }
             catch (Exception ex)
@@ -107,7 +123,7 @@ namespace ControleFinanceiro.Application.Implementation
 
             try
             {
-                _expenseInstallmentRepository.Delete(id);
+                _expenseInstallmentManager.Delete(id);
                 result.BuildSucessResult();
             }
             catch (Exception ex)
