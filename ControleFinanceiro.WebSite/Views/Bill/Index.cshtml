@@ -13,21 +13,20 @@
 </div>
 
 <div id="teste">
-
 </div>
 <table class="table">
     <thead>
         <tr>
-            <th>
+            <th style="width: 20%">
                 @Html.DisplayNameFor(model => model.Status)
             </th>
-            <th>
+            <th style="width: 20%">
                 @Html.DisplayNameFor(model => model.DueDate)
-            </th>
-            <th>
+            </th> 
+            <th style="width: 20%">
                 @Html.DisplayNameFor(model => model.Value)
             </th>
-            <th>
+            <th style="width: 20%">
                 @Html.DisplayNameFor(model => model.CreditCard.Name)
             </th>
             <th></th>
@@ -50,46 +49,36 @@
                     @Html.DisplayFor(modelItem => item.CreditCard.Name)
                 </td>
                 <td style="text-align: end">
-                    @* @Html.ActionLink("Editar", "Edit", new { id = item.Id }, new { @class = "btn btn-warning" }) *@
                     <button type="button" class="btn btn-primary" onclick="showDetails(@item.Id)">+ Detalhes</button>
-                    @* @Html.ActionLink("Excluir", "Delete", new { id = item.Id }, new { @class = "btn btn-danger" }) *@
                 </td>
-                <tr id="trDetails-@item.Id" class="d-none">
-                </tr>
+            </tr>
+            <tr id="trDetails-@item.Id" class="d-none">
+                <td id="tdDetails-@item.Id" colspan="5">
+                </td>
             </tr>
         }
     </tbody>
 </table>
 
 <script type="text/javascript">
-
-function showDetails(id) {
-    debugger;
-    // console.log('chamou função');
-    // var tr = document.getElementById("tr-" + id);
-    // tdDetail.append('teste');
-    // $("tdDetails-" + id).show();
-
-    $.ajax({
-        url: '@Url.Content("~/bill/list-items")/' + id,
-        type: "GET",
-        success: function (result) {
-            debugger;
-            if (result.success){
-                var tdDetail = document.getElementById("trDetails-" + id);
-                tdDetail.classList.remove("d-none");
-                $("#trDetails-" + id).append(result.content);
+    function showDetails(id) {
+        $.ajax({
+            url: '@Url.Content("~/bill/list-items")/' + id,
+            type: "GET",
+            success: function (result) {
+                debugger;
+                if (result.success) {
+                    var trDetails = document.getElementById("trDetails-" + id);
+                    trDetails.classList.remove("d-none");
+                    $("#tdDetails-" + id).append(result.content);
+                }
+                else {
+                    alert(result.message);
+                }
+            },
+            error: function (e) {
+                alert(e.Message);
             }
-            else
-            {
-                alert(result.message);
-            }
-        },
-        error: function (e) {
-            debugger;
-            alert(e.Message);
-        }
-    });
-}    
-
+        });
+    }
 </script>

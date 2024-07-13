@@ -3,11 +3,7 @@ using ControleFinanceiro.Application.Interfaces;
 using ControleFinanceiro.CrossCutting;
 using ControleFinanceiro.CrossCutting.DTO;
 using ControleFinanceiro.WebSite.Models;
-using ControleFinanceiro.WebSite;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Primitives;
-using System.Text;
-using NuGet.Protocol;
 
 namespace ControleFinanceiro.WebSite.Controllers
 {
@@ -50,51 +46,6 @@ namespace ControleFinanceiro.WebSite.Controllers
 
             return Json(new JsonResultViewModel(true, detailsHtml));
         }
-
-        static string RenderViewToString(System.Web.Mvc.ControllerContext context,
-  string viewPath, object model = null, bool partial = false)
-        {
-            // first find the ViewEngine for this view
-            System.Web.Mvc.ViewEngineResult viewEngineResult = null;
-            if (partial)
-                viewEngineResult = System.Web.Mvc.ViewEngines.Engines.FindPartialView(context, viewPath);
-            else
-                viewEngineResult = System.Web.Mvc.ViewEngines.Engines.FindView(context, viewPath, null);
-
-            if (viewEngineResult == null)
-                throw new FileNotFoundException("View cannot be found.");
-
-            // get the view and attach the model to view data
-            var view = viewEngineResult.View;
-            context.Controller.ViewData.Model = model;
-
-            string result = null;
-
-            using (var sw = new StringWriter())
-            {
-                var ctx = new System.Web.Mvc.ViewContext(context, view, context.Controller.ViewData, context.Controller.TempData, sw);
-                view.Render(ctx, sw);
-                result = sw.ToString();
-            }
-
-            return result;
-        }
-
-        //private string BuildDetailsHtml(IList<ExpenseInstallmentViewModel> installments)
-        //{
-        //    StringBuilder str = new StringBuilder();
-
-        //    foreach (var inst in installments)
-        //    {
-        //        str.Append("<tr>");
-        //        str.Append("<td>");
-
-        //        str.Append($"");
-
-        //        str.Append("</tr>");
-        //        str.Append("</td>");
-        //    }
-        //}
 
         public IActionResult Create()
         {
@@ -158,6 +109,35 @@ namespace ControleFinanceiro.WebSite.Controllers
             if (!result.Success) return RedirectToError(result.Message);
 
             return RedirectToAction(nameof(Index));
+        }
+
+        static string RenderViewToString(System.Web.Mvc.ControllerContext context,
+        string viewPath, object model = null, bool partial = false)
+        {
+            // first find the ViewEngine for this view
+            System.Web.Mvc.ViewEngineResult viewEngineResult = null;
+            if (partial)
+                viewEngineResult = System.Web.Mvc.ViewEngines.Engines.FindPartialView(context, viewPath);
+            else
+                viewEngineResult = System.Web.Mvc.ViewEngines.Engines.FindView(context, viewPath, null);
+
+            if (viewEngineResult == null)
+                throw new FileNotFoundException($"A Página {viewPath} não foi localizada.");
+
+            // get the view and attach the model to view data
+            var view = viewEngineResult.View;
+            context.Controller.ViewData.Model = model;
+
+            string result = null;
+
+            using (var sw = new StringWriter())
+            {
+                var ctx = new System.Web.Mvc.ViewContext(context, view, context.Controller.ViewData, context.Controller.TempData, sw);
+                view.Render(ctx, sw);
+                result = sw.ToString();
+            }
+
+            return result;
         }
     }
 }

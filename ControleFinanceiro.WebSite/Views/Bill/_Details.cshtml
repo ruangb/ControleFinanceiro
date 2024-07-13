@@ -46,12 +46,6 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Value)
                 </td>
-                @*<td>
-                    @Html.DisplayFor(modelItem => item.Person.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.CreditCard.Name)
-                </td> *@
                 <td style="text-align: end">
                     @Html.ActionLink("Editar", "Edit", new { id = item.IdExpense, installment = item.Installment }, new { @class = "btn btn-warning" })
                     @Html.ActionLink("Detalhes", "Details", new { id = item.IdExpense, installment = item.Installment }, new { @class = "btn btn-primary" })
