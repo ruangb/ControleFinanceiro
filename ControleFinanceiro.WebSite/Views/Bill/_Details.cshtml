@@ -1,8 +1,21 @@
 ﻿@model IEnumerable<ControleFinanceiro.WebSite.Models.ExpenseInstallmentViewModel>
 
-<table class="table table-hover table-condensed">
+<style>
+/*     .lightblue td {
+        background: #ebfafc !important;
+    }
+
+    .white th {
+        background: #fff !important;
+    } */
+</style>
+
+<table class="table table-striped table-hover table-condensed table-bordered">
     <thead>
         <tr>
+@*             <th>
+                &nbsp;
+            </th> *@
             <th>
                 @Html.DisplayNameFor(model => model.IdExpense)
             </th>
@@ -31,6 +44,9 @@
         @foreach (var item in Model)
         {
             <tr>
+@*                 <td>
+                    &nbsp;
+                </td> *@
                 <td>
                     @Html.DisplayFor(modelItem => item.IdExpense)
                 </td>
