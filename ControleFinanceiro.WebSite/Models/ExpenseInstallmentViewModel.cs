@@ -17,11 +17,16 @@ namespace ControleFinanceiro.WebSite.Models
         [DisplayName("Status")]
         public required string Status { get; set; }
 
-        [DisplayName("Data da Transação")]
+        [DisplayName("Data Referência")]
         [DataType(DataType.Date)]
-        public DateTime DueDate { get; set; }
+        public DateTime ReferenceDate { get; set; }
+
+        [DisplayName("InstallmentOf")]
+        public string InstallmentOf { get => $"{Installment}/{Expense.ParcelQuantity}"; }
 
         [DisplayName("Valor")]
+        [DisplayFormat(DataFormatString = "{0:C2}")]
+        [DataType(DataType.Currency)]
         public decimal Value { get; set; }
         public required ExpenseViewModel Expense { get; set; }
         public required BillViewModel Bill { get; set; }

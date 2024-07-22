@@ -42,7 +42,7 @@ namespace ControleFinanceiro.WebSite.Controllers
 
             var model = _mapper.Map<IList<ExpenseInstallmentViewModel>>(result.Model);
 
-            string detailsHtml = this.RenderViewAsync("_Details", model, true).Result;
+            string detailsHtml = this.RenderViewAsync("_Details", model.OrderBy(x => x.Expense.OperationDate), true).Result;
 
             return Json(new JsonResultViewModel(true, detailsHtml));
         }

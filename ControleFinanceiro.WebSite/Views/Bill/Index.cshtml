@@ -4,30 +4,28 @@
     ViewData["Title"] = BillViewModel.ObjectNamePlural;
 }
 
-<div>
+@* <div>
     <h4 class="float-start">@BillViewModel.ObjectNamePlural</h4>
 
     <p class="float-end">
         <a asp-action="Create" class="btn btn-success">@($"Nov{BillViewModel.Pronoun} {BillViewModel.ObjectName}")</a>
     </p>
-</div>
+</div> *@
 
-<div id="teste">
-</div>
-<table class="table">
+<table class="table table-striped table-hover table-condensed">
     <thead>
         <tr>
-            <th style="width: 20%">
-                @Html.DisplayNameFor(model => model.Status)
+            <th style="width: 10%">
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th style="width: 30%">
+                Cartão
             </th>
             <th style="width: 20%">
                 @Html.DisplayNameFor(model => model.DueDate)
             </th> 
             <th style="width: 20%">
                 @Html.DisplayNameFor(model => model.Value)
-            </th>
-            <th style="width: 20%">
-                @Html.DisplayNameFor(model => model.CreditCard.Name)
             </th>
             <th></th>
         </tr>
@@ -37,7 +35,10 @@
         {
             <tr id="tr-@item.Id">
                 <td>
-                    @Html.DisplayFor(modelItem => item.Status)
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreditCard.Name)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.DueDate)
@@ -45,14 +46,11 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Value)
                 </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.CreditCard.Name)
-                </td>
                 <td style="text-align: end">
-                    <button type="button" class="btn btn-primary" onclick="showDetails(@item.Id)">+ Detalhes</button>
+                    <button id="btn-@item.Id" type="button" class="btn btn-primary" onclick="showDetails(@item.Id)">+ Detalhes</button>
                 </td>
             </tr>
-            <tr id="trDetails-@item.Id" class="d-none">
+            <tr id="trDetails-@item.Id" style="display: none">
                 <td id="tdDetails-@item.Id" colspan="5">
                 </td>
             </tr>
@@ -61,6 +59,9 @@
 </table>
 
 <script type="text/javascript">
+
+    let alreadyLoadedBill = [];
+
     function showDetails(id) {
         $.ajax({
             url: '@Url.Content("~/bill/list-items")/' + id,
@@ -68,9 +69,21 @@
             success: function (result) {
                 debugger;
                 if (result.success) {
-                    var trDetails = document.getElementById("trDetails-" + id);
-                    trDetails.classList.remove("d-none");
-                    $("#tdDetails-" + id).append(result.content);
+                    var btnText = document.getElementById("btn-" + id).innerHTML;
+
+                    if (btnText.includes("+")){
+                        if (!alreadyLoadedBill.includes(id)) {
+                            $("#tdDetails-" + id).append(result.content);
+                            alreadyLoadedBill.push(id);
+                        }
+
+                        $("#trDetails-" + id).toggle();
+                        $("#btn-" + id).html("- Detalhes");
+                    }
+                    else{
+                        $("#trDetails-" + id).toggle();
+                        $("#btn-" + id).html("+ Detalhes");
+                    }
                 }
                 else {
                     alert(result.message);

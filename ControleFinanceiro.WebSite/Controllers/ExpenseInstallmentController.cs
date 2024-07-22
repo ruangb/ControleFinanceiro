@@ -35,7 +35,7 @@ namespace ControleFinanceiro.WebSite.Controllers
 
             var viewModel = _mapper.Map<IList<ExpenseInstallmentViewModel>>(result.Model);
 
-            return View(viewModel.OrderBy(x => x.DueDate));
+            return View(viewModel.OrderBy(x => x.ReferenceDate));
         }
 
         public IActionResult Edit(int? id)

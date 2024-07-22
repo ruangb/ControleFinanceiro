@@ -1,13 +1,16 @@
 ﻿@model IEnumerable<ControleFinanceiro.WebSite.Models.ExpenseInstallmentViewModel>
 
-<table class="table">
+<table class="table table-hover table-condensed">
     <thead>
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.IdExpense)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.DueDate)
+                @Html.DisplayNameFor(model => model.Expense.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Expense.OperationDate)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Status)
@@ -21,9 +24,6 @@
             <th>
                 @PersonViewModel.ObjectName
             </th>
-            <th>
-                @CreditCardViewModel.ObjectName
-            </th>
             <th></th>
         </tr>
     </thead>
@@ -35,21 +35,27 @@
                     @Html.DisplayFor(modelItem => item.IdExpense)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.DueDate)
+                    @Html.DisplayFor(modelItem => item.Expense.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Expense.OperationDate)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Status)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Installment)
+                    @Html.DisplayFor(modelItem => item.InstallmentOf)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Value)
                 </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Expense.Person.Name)
+                </td>
                 <td style="text-align: end">
-                    @Html.ActionLink("Editar", "Edit", new { id = item.IdExpense, installment = item.Installment }, new { @class = "btn btn-warning" })
-                    @Html.ActionLink("Detalhes", "Details", new { id = item.IdExpense, installment = item.Installment }, new { @class = "btn btn-primary" })
-                    @Html.ActionLink("Excluir", "Delete", new { id = item.IdExpense, installment = item.Installment }, new { @class = "btn btn-danger" })
+                    @Html.ActionLink("Editar", "Edit", "Expense", new { id = item.IdExpense, installment = item.Installment }, new { @class = "btn btn-warning" })
+                    @Html.ActionLink("Detalhes", "Details", "Expense", new { id = item.IdExpense, installment = item.Installment }, new { @class = "btn btn-primary" })
+                    @Html.ActionLink("Excluir", "Delete", "Expense", new { id = item.IdExpense, installment = item.Installment }, new { @class = "btn btn-danger" })
                 </td>
             </tr>
         }

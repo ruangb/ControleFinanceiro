@@ -8,12 +8,12 @@ namespace ControleFinanceiro.WebSite.Models
         [DisplayName("Status")]
         public required string Status { get; set; }
 
-        [DisplayName("Data da Vencimento")]
+        [DisplayName("Data de Vencimento")]
         [DataType(DataType.Date)]
         public required DateTime DueDate { get; set; }
 
         [DisplayName("Total")]
-        [DisplayFormat(DataFormatString = "{0:N2}")]
+        [DisplayFormat(DataFormatString = "{0:C2}")]
         [DataType(DataType.Currency)]
         public decimal Value { get; set; }
 
