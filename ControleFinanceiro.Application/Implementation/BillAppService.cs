@@ -34,13 +34,13 @@ namespace ControleFinanceiro.Application.Implementation
             return result;
         }
 
-        public AppServiceResult<IEnumerable<BillDTO>> GetAllBills()
+        public AppServiceResult<IEnumerable<BillDTO>> GetAllBills(bool onlyThirds)
         {
             AppServiceResult<IEnumerable<BillDTO>> result = new();
 
             try
             {
-                result.BuildSucessResult(_mapper.Map<IEnumerable<BillDTO>>(_BillRepository.GetAllBills()));
+                result.BuildSucessResult(_mapper.Map<IEnumerable<BillDTO>>(_BillRepository.GetAllBills(onlyThirds)));
             }
             catch (Exception ex)
             {

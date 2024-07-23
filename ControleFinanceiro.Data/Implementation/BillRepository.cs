@@ -20,15 +20,20 @@ namespace ControleFinanceiro.Data.Implementation
             return ExecuteGetAll();
         }
 
-        public IEnumerable<Bill> GetAllBills()
+        public IEnumerable<Bill> GetAllBills(bool onlyThirds)
         {
             using (var conn = new SqlConnection(_context.GetConnectionString()))
             {
                 conn.Open();
 
-                var sql = @"SELECT b.Id, b.IdCreditCard, b.DueDate, SUM(ei.Value) Value, c.[Name] FROM ExpenseInstallment (NOLOCK) ei
+                var sql = @$"SELECT b.Id, b.IdCreditCard, b.DueDate, SUM(ei.Value) Value, c.[Name] FROM ExpenseInstallment (NOLOCK) ei
                             INNER JOIN Bill (NOLOCK) b ON ei.IdBill = b.Id
                             INNER JOIN CreditCard (NOLOCK) c ON b.IdCreditCard = c.Id
+                            {(onlyThirds ? 
+                            "INNER JOIN Expense (NOLOCK) e ON ei.IdExpense = e.Id " +
+                            "INNER JOIN Person (NOLOCK) p ON e.IdPerson = p.Id " +
+                            "WHERE p.Main = 0" 
+                            : "")}
                             GROUP BY b.Id, b.IdCreditCard, b.DueDate, c.[Name]";
 
                 var bills = conn.Query<Bill, CreditCard, Bill>(sql, (bill, creditCard) => {

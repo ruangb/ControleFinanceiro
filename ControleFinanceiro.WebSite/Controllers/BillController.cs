@@ -23,13 +23,29 @@ namespace ControleFinanceiro.WebSite.Controllers
 
         public IActionResult Index()
         {
-            AppServiceResult<IEnumerable<BillDTO>> result = _billAppService.GetAllBills();
+            AppServiceResult<IEnumerable<BillDTO>> result = _billAppService.GetAllBills(true);
 
             if (!result.Success) return RedirectToError(result.Message);
 
             var model = _mapper.Map<IList<BillViewModel>>(result.Model);
 
+            ViewBag.OnlyThirds = true;
+
             return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult Index(bool onlyThirds)
+        {
+            AppServiceResult<IEnumerable<BillDTO>> result = _billAppService.GetAllBills(onlyThirds);
+
+            if (!result.Success) return RedirectToError(result.Message);
+
+            var model = _mapper.Map<IList<BillViewModel>>(result.Model);
+
+            ViewBag.OnlyThirds = onlyThirds;
+
+            return View("Index", model);
         }
 
         [HttpGet]

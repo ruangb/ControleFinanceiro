@@ -5,7 +5,7 @@ namespace ControleFinanceiro.Domain.Manager.Interfaces
     public interface IBillManager
     {
         IEnumerable<Bill> GetAll();
-        IEnumerable<Bill> GetAllBills();
+        IEnumerable<Bill> GetAllBills(bool onlyThirds);
         Bill GetById(int id);
         int Insert(Bill obj);
         void Update(Bill obj);
