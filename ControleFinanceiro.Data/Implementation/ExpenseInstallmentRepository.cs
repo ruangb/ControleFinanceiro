@@ -49,7 +49,7 @@ namespace ControleFinanceiro.Data.Implementation
             }
         }
 
-        public IEnumerable<ExpenseInstallment> GetAllExpenseInstallmentsByBill(int billId/*, bool onlyThirds*/)
+        public IEnumerable<ExpenseInstallment> GetAllExpenseInstallmentsByBill(int billId, bool onlyThirds)
         {
             using (var conn = new SqlConnection(_context.GetConnectionString()))
             {
@@ -62,8 +62,8 @@ namespace ControleFinanceiro.Data.Implementation
                              INNER JOIN Person (NOLOCK) p ON e.IdPerson = p.Id
                              WHERE b.Id = {billId}";
 
-                //if (onlyThirds)
-                //    sql += " AND e.Main = 0";
+                if (onlyThirds)
+                    sql += " AND p.Main = 0";
 
                 var expenseInstallments = conn.Query<ExpenseInstallment, Expense, CreditCard, Person, ExpenseInstallment>(sql, (expenseInsallment, expense, creditCard, person) => {
                     expenseInsallment.Expense = expense;

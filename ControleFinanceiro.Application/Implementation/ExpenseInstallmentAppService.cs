@@ -50,13 +50,13 @@ namespace ControleFinanceiro.Application.Implementation
             return result;
         }
 
-        public AppServiceResult<IEnumerable<ExpenseInstallmentDTO>> GetAllExpenseInstallmentsByBill(int billId)
+        public AppServiceResult<IEnumerable<ExpenseInstallmentDTO>> GetAllExpenseInstallmentsByBill(int billId, bool onlyThirds)
         {
             AppServiceResult<IEnumerable<ExpenseInstallmentDTO>> result = new();
 
             try
             {
-                result.BuildSucessResult(_mapper.Map<IEnumerable<ExpenseInstallmentDTO>>(_expenseInstallmentManager.GetAllExpenseInstallmentsByBill(billId)));
+                result.BuildSucessResult(_mapper.Map<IEnumerable<ExpenseInstallmentDTO>>(_expenseInstallmentManager.GetAllExpenseInstallmentsByBill(billId, onlyThirds)));
             }
             catch (Exception ex)
             {

@@ -9,7 +9,7 @@ namespace ControleFinanceiro.Data.Interfaces
         IEnumerable<Expense> GetAllExpenses();
         ExpenseInstallment GetById(int id);
         IEnumerable<ExpenseInstallment> GetByExpenseId(int expenseId, SqlConnection conn);
-        IEnumerable<ExpenseInstallment> GetAllExpenseInstallmentsByBill(int billId);
+        IEnumerable<ExpenseInstallment> GetAllExpenseInstallmentsByBill(int billId, bool onlyThirds);
         int Insert(ExpenseInstallment entity);
         void Update(ExpenseInstallment entity);
         void Delete(int id);

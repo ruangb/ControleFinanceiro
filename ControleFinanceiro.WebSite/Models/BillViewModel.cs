@@ -3,8 +3,11 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ControleFinanceiro.WebSite.Models
 {
-    public class BillViewModel : BaseViewModel
+    public class BillViewModel 
     {
+        [DisplayName("# Fatura")]
+        public required int Id { get; set; }
+
         [DisplayName("Status")]
         public required string Status { get; set; }
 

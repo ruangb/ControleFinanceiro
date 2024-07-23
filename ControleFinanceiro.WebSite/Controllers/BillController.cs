@@ -49,10 +49,10 @@ namespace ControleFinanceiro.WebSite.Controllers
         }
 
         [HttpGet]
-        [Route("bill/list-items/{billId}")]
-        public IActionResult GetExpenseInstallmentsByBill(int billId)
+        [Route("bill/list-items/{billId}/{onlyThirds}")]
+        public IActionResult GetExpenseInstallmentsByBill(int billId, bool onlyThirds)
         {
-            AppServiceResult<IEnumerable<ExpenseInstallmentDTO>> result = _expenseInstallmentAppService.GetAllExpenseInstallmentsByBill(billId);
+            AppServiceResult<IEnumerable<ExpenseInstallmentDTO>> result = _expenseInstallmentAppService.GetAllExpenseInstallmentsByBill(billId, onlyThirds);
 
             if (!result.Success) return RedirectToErrorJson(result.Message);
 

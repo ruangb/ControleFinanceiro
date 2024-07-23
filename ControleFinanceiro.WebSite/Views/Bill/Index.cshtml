@@ -15,7 +15,7 @@
     <div class="row py-5">
         <div class="col-md-2 offset-md-5 align-content-center">
             @Html.DisplayName("Somente terceiros")
-            @Html.CheckBox("onlyThirds", (bool)ViewBag.OnlyThirds, htmlAttributes: new { @onchange = "this.form.submit()" })
+            @Html.CheckBox("onlyThirds", htmlAttributes: new { @onchange = "this.form.submit()" })
         </div>
     </div>
 </form>
@@ -71,35 +71,37 @@
     let alreadyLoadedBill = [];
 
     function showDetails(id) {
-        $.ajax({
-            url: '@Url.Content("~/bill/list-items")/' + id,
-            type: "GET",
-            success: function (result) {
-                debugger;
-                if (result.success) {
-                    var btnText = document.getElementById("btn-" + id).innerHTML;
+        var btnText = document.getElementById("btn-" + id).innerHTML;
 
-                    if (btnText.includes("+")) {
-                        if (!alreadyLoadedBill.includes(id)) {
-                            $("#tdDetails-" + id).append(result.content);
-                            alreadyLoadedBill.push(id);
-                        }
-
+        debugger;
+        if (btnText.includes("-")) {
+            $("#trDetails-" + id).toggle();
+            $("#btn-" + id).html("+ Detalhes");
+        }
+        else if (alreadyLoadedBill.includes(id)) {
+            $("#trDetails-" + id).toggle();
+            $("#btn-" + id).html("- Detalhes");
+        }
+        else{
+            $.ajax({
+                url: '@Url.Content("~/bill/list-items")/' + id + '/' + document.getElementById("onlyThirds").checked,
+                type: "GET",
+                success: function (result) {
+                    debugger;
+                    if (result.success) {
+                        $("#tdDetails-" + id).append(result.content);
                         $("#trDetails-" + id).toggle();
                         $("#btn-" + id).html("- Detalhes");
+                        alreadyLoadedBill.push(id);
                     }
                     else {
-                        $("#trDetails-" + id).toggle();
-                        $("#btn-" + id).html("+ Detalhes");
+                        alert(result.message);
                     }
+                },
+                error: function (e) {
+                    alert(e.Message);
                 }
-                else {
-                    alert(result.message);
-                }
-            },
-            error: function (e) {
-                alert(e.Message);
-            }
-        });
+            });
+        }
     }
 </script>
