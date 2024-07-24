@@ -8,7 +8,7 @@ namespace ControleFinanceiro.WebSite.Models
         [DisplayName("Status")]
         public required string Status { get; set; }
 
-        [DisplayName("Data da Transação")]
+        [DisplayName("Data Transação")]
         [DataType(DataType.Date)]
         public DateTime OperationDate { get; set; }
 
@@ -18,13 +18,12 @@ namespace ControleFinanceiro.WebSite.Models
         public required string Description { get; set; }
 
         [DisplayName("Valor")]
-        //[DisplayFormat(DataFormatString = "{0,##}")]
         [DeniedValues(0, ErrorMessage = "O valor não pode ser zero")]
-        [DisplayFormat(DataFormatString = "{0:N2}")]
+        [DisplayFormat(DataFormatString = "{0:C2}")]
         [DataType(DataType.Currency)]
         public decimal Amount { get; set; }
 
-        [DisplayName("Quantidade de Parcelas")]
+        [DisplayName("Parcelas")]
         [DeniedValues(0, ErrorMessage = "Deve ser informado no mínimo 1 parcela")]
         public short ParcelQuantity { get; set; }
 
@@ -32,12 +31,14 @@ namespace ControleFinanceiro.WebSite.Models
         [DeniedValues(0, ErrorMessage = "Selecione um valor")]
         public required int IdPerson { get; set; }
 
-        [DisplayName("Cartão de Crédito")]
+        [DisplayName("Cartão")]
         public int? IdCreditCard { get; set; }
 
         public required PersonViewModel Person { get; set; }
 
         public CreditCardViewModel? CreditCard { get; set; }
+
+        public List<ExpenseInstallmentViewModel> ExpenseIntallments { get; set; }
 
         #region Text Properties
         public static string? ObjectName { get => "Despesa"; }

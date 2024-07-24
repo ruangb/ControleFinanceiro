@@ -13,7 +13,7 @@
 
 <form asp-action="Index">
     <div class="row py-5">
-        <div class="col-md-2 offset-md-5 align-content-center">
+        <div class="col-md-2 offset-5 align-content-center">
             @Html.DisplayName("Somente terceiros")
             @Html.CheckBox("onlyThirds", htmlAttributes: new { @onchange = "this.form.submit()" })
         </div>
@@ -55,7 +55,7 @@
                     @Html.DisplayFor(modelItem => item.Value)
                 </td>
                 <td style="text-align: end">
-                    <button id="btn-@item.Id" type="button" class="btn btn-primary" onclick="showDetails(@item.Id)">+ Detalhes</button>
+                    <button id="btn-@item.Id" type="button" class="btn btn-primary btn-sm" onclick="showDetails(@item.Id)">+ Detalhes</button>
                 </td>
             </tr>
             <tr id="trDetails-@item.Id" style="display: none">
@@ -73,7 +73,6 @@
     function showDetails(id) {
         var btnText = document.getElementById("btn-" + id).innerHTML;
 
-        debugger;
         if (btnText.includes("-")) {
             $("#trDetails-" + id).toggle();
             $("#btn-" + id).html("+ Detalhes");

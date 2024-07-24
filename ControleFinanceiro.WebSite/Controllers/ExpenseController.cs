@@ -88,6 +88,19 @@ namespace ControleFinanceiro.WebSite.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        public IActionResult Details(int? id)
+        {
+            if (id == null) return RedirectToError("Id não fornecido.");
+
+            AppServiceResult<ExpenseDTO> result = _expenseAppService.GetById(id.Value);
+
+            if (!result.Success) return RedirectToError(result.Message);
+
+            var viewModel = _mapper.Map<ExpenseViewModel>(result.Model);
+
+            return View(viewModel);
+        }
+
         public IActionResult Delete(int? id)
         {
             if (id == null) return RedirectToError("Id não fornecido.");

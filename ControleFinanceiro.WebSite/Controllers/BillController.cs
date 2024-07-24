@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ControleFinanceiro.WebSite.Controllers
 {
-    //[Route("bill")]
     public class BillController : BaseController
     {
         private readonly IBillAppService _billAppService;

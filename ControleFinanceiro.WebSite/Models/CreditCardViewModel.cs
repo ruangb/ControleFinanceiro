@@ -8,7 +8,7 @@ namespace ControleFinanceiro.WebSite.Models
         [DisplayName("Nome")]
         [MinLength(2, ErrorMessage = "Informe ao menos {1} caracteres")]
         [MaxLength(20, ErrorMessage = "Informe no máximo {1} caracteres")]
-        public required string Name { get => name; set => name = value.Trim(); }
+        public required string Name { get => name; set => name = !string.IsNullOrEmpty(value) ? value.Trim() : value; }
 
         [DisplayName("Dia de Vencimento")]
         public required short DueDay { get; set; }

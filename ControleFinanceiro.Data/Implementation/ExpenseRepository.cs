@@ -27,21 +27,61 @@ namespace ControleFinanceiro.Data.Implementation
 
                 var sql = @"SELECT * FROM Expense (NOLOCK) exp
                           INNER JOIN Person per ON exp.IdPerson = per.Id
-                          LEFT JOIN CreditCard cre ON exp.IdCreditCard = cre.Id";
+                          LEFT JOIN CreditCard cre ON exp.IdCreditCard = cre.Id
+                          INNER JOIN ExpenseInstallment ei ON exp.Id = ei.IdExpense";
 
-                var expenses = conn.Query<Expense, Person, CreditCard, Expense>(sql, (expense, person, creditCard) => {
+                var expenses = conn.Query<Expense, Person, CreditCard, ExpenseInstallment, Expense>(sql, (expense, person, creditCard, expenseInstallment) => {
                     expense.Person = person;
                     expense.CreditCard = creditCard;
+                    expense.ExpenseInstallments = [expenseInstallment];
                     return expense;
+                }, splitOn: "Id, Id, Id, IdExpense");
+
+                var result = expenses.GroupBy(e => e.Id).Select(g =>
+                {
+                    var exp = g.First();
+                    exp.ExpenseInstallments = g.Select(e => e.ExpenseInstallments.Single()).ToList();
+                    return exp;
                 });
 
-                return expenses;
+                return result.ToList();
             }
         }
 
         public Expense GetById(int id)
         {
-            return ExecuteGetById(id);
+            using (var conn = new SqlConnection(_context.GetConnectionString()))
+            {
+                List<ExpenseInstallment> lstExpenseInstallments = [];
+
+                conn.Open();
+                var sql = @$"SELECT * FROM Expense (NOLOCK) exp
+                          INNER JOIN Person per ON exp.IdPerson = per.Id
+                          LEFT JOIN CreditCard cre ON exp.IdCreditCard = cre.Id
+                          INNER JOIN ExpenseInstallment ei ON exp.Id = ei.IdExpense
+                          WHERE exp.Id = {id}";
+
+                var expenses = conn.Query<Expense, Person, CreditCard, ExpenseInstallment, Expense>(sql, (expense, person, creditCard, expenseInstallment) => {
+                    expense.Person = person;
+                    expense.CreditCard = creditCard;
+                    lstExpenseInstallments.Add(expenseInstallment);
+                    return expense;
+                }, splitOn: "Id, Id, Id, Id");
+
+                foreach (var exp in expenses)
+                {
+                    exp.ExpenseInstallments = lstExpenseInstallments;
+                }
+
+                //var result = expenses.GroupBy(e => e.Id).Select(g =>
+                //{
+                //    var exp = g.First();
+                //    exp.ExpenseInstallments = g.Select(e => e.ExpenseInstallments).FirstOrDefault();
+                //    return exp;
+                //});
+
+                return expenses.FirstOrDefault();
+            }
         }
 
         public int Insert(Expense entity)

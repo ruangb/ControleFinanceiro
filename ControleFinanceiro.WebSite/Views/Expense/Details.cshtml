@@ -1,20 +1,14 @@
 ﻿@model ControleFinanceiro.WebSite.Models.ExpenseViewModel
 
 @{
-    ViewData["Title"] = $"Deletar {ExpenseViewModel.ObjectName}";
+    ViewData["Title"] = "Detalhes";
 }
 
-<h4>Deletar @ExpenseViewModel.ObjectName</h4>
+<h2>Detalhes</h2>
 
 <div>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Id)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Id)
-        </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Status)
         </dt>
@@ -39,28 +33,27 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Amount)
         </dd>
-        <dt class="col-sm-2">
+        <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.ParcelQuantity)
         </dt>
-        <dd class="col-sm-10">
+        <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.ParcelQuantity)
         </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Person.Name)
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.IdCreditCard)
         </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Person.Name)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.CreditCard.Name)
-        </dt>
-        <dd class="col-sm-10">
+        <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.CreditCard.Name)
         </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.IdPerson)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Person.Name)
+        </dd>
     </dl>
-    
-    <form asp-action="Delete">
-        <input type="submit" value="Delete" class="btn btn-danger btn-sm" confirm="return confirm('Tem certeza que deseja deletar @ExpenseViewModel.Pronoun @ExpenseViewModel.ObjectName?')" /> |
-        <a asp-action="Index">Voltar à lista</a>
-    </form>
+</div>
+<div>
+    @Html.ActionLink("Editar", "Edit", "Expense", new { id = Model.Id }, new { @class = "btn btn-warning btn-sm" })
+    <a asp-action="Index">Voltar à Lista</a>
 </div>

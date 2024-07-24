@@ -1,0 +1,74 @@
+﻿@model IEnumerable<ControleFinanceiro.WebSite.Models.ExpenseInstallmentViewModel>
+
+@{
+    ViewData["Title"] = ExpenseInstallmentViewModel.ObjectNamePlural;
+}
+
+<div>
+    <h4 class="float-start">@ExpenseInstallmentViewModel.ObjectNamePlural</h4>
+
+    <p class="float-end">
+        <a asp-action="Create" class="btn btn-success btn-sm">@($"Nov{ExpenseInstallmentViewModel.Pronoun} {ExpenseInstallmentViewModel.ObjectName}")</a>
+    </p>
+</div>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.IdExpense)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ReferenceDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Installment)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Value)
+            </th>
+            <th>
+                @PersonViewModel.ObjectName
+            </th>
+            <th>
+                @CreditCardViewModel.ObjectName
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IdExpense)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ReferenceDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Status)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Installment)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Value)
+                </td>
+@*                 <td>
+                    @Html.DisplayFor(modelItem => item.Person.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreditCard.Name)
+                </td> *@
+                <td style="text-align: end">
+                    @Html.ActionLink("Editar", "Edit", new { id = item.IdExpense, installment = item.Installment }, new { @class = "btn btn-warning btn-sm" })
+                    @Html.ActionLink("Detalhes", "Details", new { id = item.IdExpense, installment = item.Installment }, new { @class = "btn btn-primary btn-sm" })
+                    @Html.ActionLink("Excluir", "Delete", new { id = item.IdExpense, installment = item.Installment }, new { @class = "btn btn-danger btn-sm" })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

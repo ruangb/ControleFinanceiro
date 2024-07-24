@@ -74,7 +74,7 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Bill}/{action=Index}/{id?}");
 
 var ptBRCulture = new CultureInfo("pt-BR");
 var localizationOptions = new RequestLocalizationOptions()

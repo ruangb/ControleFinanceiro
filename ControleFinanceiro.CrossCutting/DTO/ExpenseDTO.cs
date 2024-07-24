@@ -11,5 +11,6 @@
         public int? IdCreditCard { get; set; }
         public required PersonDTO Person { get; set; }
         public CreditCardDTO? CreditCard { get; set; }
+        public List<ExpenseInstallmentDTO>? ExpenseInstallments { get; set; }
     }
 }
