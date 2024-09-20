@@ -5,6 +5,8 @@ using System.Data.SqlClient;
 using Dapper;
 using System.Data;
 using System.Transactions;
+using System.Text.Json.Serialization;
+using System.Text.Json;
 
 namespace ControleFinanceiro.Data.Implementation
 {
@@ -25,7 +27,10 @@ namespace ControleFinanceiro.Data.Implementation
             {
                 conn.Open();
 
-                var sql = @"SELECT * FROM Expense (NOLOCK) exp
+                var sql = @"SELECT exp.Id, exp.IdPerson, exp.IdCreditCard, exp.Status, exp.OperationDate, exp.Description, exp.Amount, 
+                                   exp.ParcelQuantity, per.Id perId, per.Name, per.Main, per.Inactive, cre.Id creId, cre.Name, cre.DueDay, cre.ClosingDays, 
+                                   cre.Inactive, ei.Id eiId, ei.IdExpense, ei.IdBill, ei.Installment, ei.Status, ei.ReferenceDate, ei.Value 
+                          FROM Expense (NOLOCK) exp
                           INNER JOIN Person per ON exp.IdPerson = per.Id
                           LEFT JOIN CreditCard cre ON exp.IdCreditCard = cre.Id
                           INNER JOIN ExpenseInstallment ei ON exp.Id = ei.IdExpense";
@@ -35,7 +40,7 @@ namespace ControleFinanceiro.Data.Implementation
                     expense.CreditCard = creditCard;
                     expense.ExpenseInstallments = [expenseInstallment];
                     return expense;
-                }, splitOn: "Id, Id, Id, IdExpense");
+                }, splitOn: "Id, perId, creId, eiId");
 
                 var result = expenses.GroupBy(e => e.Id).Select(g =>
                 {
@@ -55,7 +60,10 @@ namespace ControleFinanceiro.Data.Implementation
                 List<ExpenseInstallment> lstExpenseInstallments = [];
 
                 conn.Open();
-                var sql = @$"SELECT * FROM Expense (NOLOCK) exp
+                var sql = @$"SELECT exp.Id, exp.IdPerson, exp.IdCreditCard, exp.Status, exp.OperationDate, exp.Description, exp.Amount, 
+                                    exp.ParcelQuantity, per.Id perId, per.Name, per.Main, per.Inactive, cre.Id creId, cre.Name, cre.DueDay, cre.ClosingDays, 
+                                    cre.Inactive, ei.Id eiId, ei.IdExpense, ei.IdBill, ei.Installment, ei.Status, ei.ReferenceDate, ei.Value 
+                          FROM Expense (NOLOCK) exp
                           INNER JOIN Person per ON exp.IdPerson = per.Id
                           LEFT JOIN CreditCard cre ON exp.IdCreditCard = cre.Id
                           INNER JOIN ExpenseInstallment ei ON exp.Id = ei.IdExpense
@@ -66,19 +74,12 @@ namespace ControleFinanceiro.Data.Implementation
                     expense.CreditCard = creditCard;
                     lstExpenseInstallments.Add(expenseInstallment);
                     return expense;
-                }, splitOn: "Id, Id, Id, Id");
+                }, splitOn: "Id, perId, creId, eiId");
 
                 foreach (var exp in expenses)
                 {
                     exp.ExpenseInstallments = lstExpenseInstallments;
                 }
-
-                //var result = expenses.GroupBy(e => e.Id).Select(g =>
-                //{
-                //    var exp = g.First();
-                //    exp.ExpenseInstallments = g.Select(e => e.ExpenseInstallments).FirstOrDefault();
-                //    return exp;
-                //});
 
                 return expenses.FirstOrDefault();
             }

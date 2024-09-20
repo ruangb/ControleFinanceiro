@@ -67,8 +67,10 @@ namespace ControleFinanceiro.WebSite.Controllers
 
             if (!result.Success) return RedirectToError(result.Message);
 
+            var installment = _mapper.Map<List<ExpenseInstallmentViewModel>>((result.Model as ExpenseDTO).ExpenseInstallments);
             var viewModel = _mapper.Map<ExpenseViewModel>(result.Model);
 
+            viewModel.ExpenseIntallments = installment;
             ViewBag.CreditCards = BuildCreditCardSelectListItem(viewModel.IdCreditCard);
             ViewBag.Persons = BuildPersonSelectListItem(viewModel.IdPerson);
             ViewBag.Status = new SelectList(Enums.GetDescriptions<Enums.ExpenseStatus>(), viewModel.Status);
