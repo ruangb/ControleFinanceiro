@@ -54,7 +54,7 @@ BEGIN
 	END ELSE
 	BEGIN 
 		UPDATE ExpenseInstallment
-		SET IdBill = @IdBill, Installment = @N_INSTALLMENT, [Status] = @S_STATUS, ReferenceDate = @D_REFERENCE_DATE, [Value] = @N_VALUE
+		SET IdBill = @IdBill, [Status] = @S_STATUS, [Value] = @N_VALUE
 		WHERE Id = @N_ID
 	END
 

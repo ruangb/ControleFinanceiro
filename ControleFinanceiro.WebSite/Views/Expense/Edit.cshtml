@@ -5,7 +5,14 @@
     ViewData["Title"] = $"Editar {ExpenseViewModel.ObjectName}";
 }
 
-<h4>Editar @ExpenseViewModel.ObjectName</h4>
+<div class="row">
+    <div class="col-md-6">
+        <h4>Editar @ExpenseViewModel.ObjectName - #@Model.Id</h4>
+    </div>
+    <div class="col-md-2 offset-md-4 align-content-center">
+        <a asp-action="Index">Voltar à lista</a>
+    </div>
+</div>
 
 <hr />
 <div class="row">
@@ -32,7 +39,6 @@
                     <span asp-validation-for="Description" class="text-danger"></span>
                 </div>
             </div>
-
             <div class="row">
                 <div class="col-md-3">
                     <label asp-for="Amount" class="control-label"></label>
@@ -52,7 +58,7 @@
                 </div>
                 <div class="col-md-6">
                     <label asp-for="IdCreditCard" class="control-label"></label>
-                    <select asp-for="IdCreditCard" asp-items="@ViewBag.CreditCards" class="form-control" readonly ></select>
+                    <select asp-for="IdCreditCard" asp-items="@ViewBag.CreditCards" class="form-control" readonly></select>
                 </div>
             </div>
             <div class="form-group my-2">
@@ -63,13 +69,10 @@
 </div>
 
 <div class="row">
-    <div class="col-md-6 offset-md-3">
+    <div class="col-md-8 offset-md-2">
+        <hr />
         <partial name="_Items" model="@Model.ExpenseIntallments" />
     </div>
-</div>
-
-<div>
-    <a asp-action="Index" class="float-end">Voltar à lista</a>
 </div>
 
 @section Scripts {
@@ -86,6 +89,11 @@
             var regex = /^-?(?:\d+|\d{1,3}(?:.\d{3})+)(?:(\,|.)\d+)?$/;
             return regex.test(value);
         }
+
+        debugger;
+
+        $('#Amount').mask('0.000,00');
+
     });
 
     function isValidDate(dateString) {
@@ -122,11 +130,7 @@
                 Description: {
                     required: true,
                     minlength: 15
-                },
-                // name: {
-                //     required: true,
-                //     minlength: 2
-                // }
+                }
             },
             messages: {
                 Description: {
@@ -143,7 +147,7 @@
             }
         });
 
-        var test = $('frmEdit').valid();
+        var validate = $('frmEdit').valid();
     }
 
 </script>
