@@ -10,7 +10,7 @@ GO
 -- Create date: 22/05/2024
 -- Description:     Grava ou atualiza uma parcela da Despesa amarrando-a a uma Fatura, que, se não existente, também será criada nesta proc
 -- Modifications: DD/MM/YYYY      |     Author    |    Description
---         
+--				  24/09/2024		Ruan G.B.		Ajuste para garantir o lançamento de uma parcela por fatura, quando dentro de um loop
 -- ================================================================
 CREATE PROCEDURE [dbo].[PRC_SAVE_EXPENSE_INSTALLMENT]
         @N_ID             INT 
@@ -30,9 +30,9 @@ BEGIN
 	DECLARE @CreditCardClosingDays SMALLINT = (SELECT ClosingDays FROM CreditCard (NOLOCK) WHERE Id = @N_ID_CREDIT_CARD);	
 
 	DECLARE @ReferenceDatePlusClosingDays DATETIME = (SELECT DATEADD(DAY, (@CreditCardClosingDays), @D_REFERENCE_DATE));
-	DECLARE @CreditCardDueDate DATETIME = (SELECT DATEFROMPARTS (YEAR(@D_REFERENCE_DATE), MONTH(@ReferenceDatePlusClosingDays), @CreditCardDueDay));
+	DECLARE @CreditCardDueDate DATETIME = (SELECT DATEFROMPARTS (YEAR(@ReferenceDatePlusClosingDays), MONTH(@ReferenceDatePlusClosingDays), @CreditCardDueDay));
 
-	IF (@ReferenceDatePlusClosingDays > @CreditCardDueDate)
+	IF (@N_INSTALLMENT = 1 AND @ReferenceDatePlusClosingDays > @CreditCardDueDate)
 	BEGIN 
 		SET @CreditCardDueDate = (SELECT DATEADD(MONTH, 1, @CreditCardDueDate))
 	END
