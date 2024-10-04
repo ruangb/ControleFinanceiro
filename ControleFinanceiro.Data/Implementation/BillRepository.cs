@@ -20,21 +20,32 @@ namespace ControleFinanceiro.Data.Implementation
             return ExecuteGetAll();
         }
 
-        public IEnumerable<Bill> GetAllBills(bool onlyThirds)
+        public IEnumerable<Bill> GetAllBills(int idPerson, bool onlyThirds)
         {
             using (var conn = new SqlConnection(_context.GetConnectionString()))
             {
+                string filter = string.Empty;
+                
                 conn.Open();
 
+                if (onlyThirds || idPerson > 0)
+                {
+                    filter = @" INNER JOIN Expense (NOLOCK) e ON ei.IdExpense = e.Id 
+                                INNER JOIN Person (NOLOCK) p ON e.IdPerson = p.Id ";
+
+                    if (onlyThirds)
+                        filter += " WHERE p.Main = 0 ";
+
+                    if (idPerson > 0)
+                        filter += $"{(onlyThirds ? "AND" : "WHERE")} p.Id = {idPerson}";
+                }
+
                 var sql = @$"SELECT b.Id, b.IdCreditCard, b.DueDate, SUM(ei.Value) Value, c.[Name] FROM ExpenseInstallment (NOLOCK) ei
-                            INNER JOIN Bill (NOLOCK) b ON ei.IdBill = b.Id
-                            INNER JOIN CreditCard (NOLOCK) c ON b.IdCreditCard = c.Id
-                            {(onlyThirds ? 
-                            "INNER JOIN Expense (NOLOCK) e ON ei.IdExpense = e.Id " +
-                            "INNER JOIN Person (NOLOCK) p ON e.IdPerson = p.Id " +
-                            "WHERE p.Main = 0" 
-                            : "")}
-                            GROUP BY b.Id, b.IdCreditCard, b.DueDate, c.[Name]";
+                        INNER JOIN Bill (NOLOCK) b ON ei.IdBill = b.Id
+                        INNER JOIN CreditCard (NOLOCK) c ON b.IdCreditCard = c.Id
+                        {filter}
+                        GROUP BY b.Id, b.IdCreditCard, b.DueDate, c.[Name]
+                        ORDER BY b.DueDate ASC";
 
                 var bills = conn.Query<Bill, CreditCard, Bill>(sql, (bill, creditCard) => {
                     bill.CreditCard = creditCard;

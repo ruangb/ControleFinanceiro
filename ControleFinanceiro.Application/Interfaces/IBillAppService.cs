@@ -6,7 +6,7 @@ namespace ControleFinanceiro.Application.Interfaces
     public interface IBillAppService
     {
         AppServiceResult<IEnumerable<BillDTO>> GetAll();
-        AppServiceResult<IEnumerable<BillDTO>> GetAllBills(bool onlyThirds);
+        AppServiceResult<IEnumerable<BillDTO>> GetAllBills(ExpenseDTO dto);
         AppServiceResult<BillDTO> GetById(int id);
         AppServiceResult<int> Insert(BillDTO obj);
         AppServiceBaseResult Update(BillDTO obj);

@@ -41,8 +41,8 @@ namespace ControleFinanceiro.WebSite.Controllers
 
         public IActionResult Create()
         {
-            ViewBag.CreditCards = BuildCreditCardSelectListItem();
-            ViewBag.Persons = BuildPersonSelectListItem();
+            ViewBag.CreditCards = BuildCreditCardSelectListItem(_mapper, _creditCardAppService);
+            ViewBag.Persons = BuildPersonSelectListItem(_mapper, _personAppService, "Selecione");
             ViewBag.Status = new SelectList(Enums.GetDescriptions<Enums.ExpenseStatus>());
 
             return View();
@@ -71,8 +71,9 @@ namespace ControleFinanceiro.WebSite.Controllers
             var viewModel = _mapper.Map<ExpenseViewModel>(result.Model);
 
             viewModel.ExpenseIntallments = installment;
-            ViewBag.CreditCards = BuildCreditCardSelectListItem(viewModel.IdCreditCard);
-            ViewBag.Persons = BuildPersonSelectListItem(viewModel.IdPerson);
+
+            ViewBag.CreditCards = BuildCreditCardSelectListItem(_mapper, _creditCardAppService, viewModel.IdCreditCard);
+            ViewBag.Persons = BuildPersonSelectListItem(_mapper, _personAppService, "Selecione", viewModel.IdPerson);
             ViewBag.Status = new SelectList(Enums.GetDescriptions<Enums.ExpenseStatus>(), viewModel.Status);
 
             return View(viewModel);
@@ -126,36 +127,36 @@ namespace ControleFinanceiro.WebSite.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        protected List<SelectListItem> BuildCreditCardSelectListItem(int? id = null)
-        {
-            List<SelectListItem> listItem = [];
+        //protected List<SelectListItem> BuildCreditCardSelectListItem(int? id = null)
+        //{
+        //    List<SelectListItem> listItem = [];
 
-            AppServiceResult<IEnumerable<CreditCardDTO>> creditCardsDTO = _creditCardAppService.GetAll();
-            var creditCards = _mapper.Map<IList<CreditCardViewModel>>(creditCardsDTO.Model);
+        //    AppServiceResult<IEnumerable<CreditCardDTO>> creditCardsDTO = _creditCardAppService.GetAll();
+        //    var creditCards = _mapper.Map<IList<CreditCardViewModel>>(creditCardsDTO.Model);
 
-            foreach (var item in creditCards)
-            {
-                listItem.Add(new SelectListItem(item.Name, item.Id.ToString(), item.Id == id));
-            }
+        //    foreach (var item in creditCards)
+        //    {
+        //        listItem.Add(new SelectListItem(item.Name, item.Id.ToString(), item.Id == id));
+        //    }
 
-            listItem.Insert(0, new SelectListItem("Selecione", null, id == null));
-            return listItem;
-        }
+        //    listItem.Insert(0, new SelectListItem("Selecione", null, id == null));
+        //    return listItem;
+        //}
 
-        protected List<SelectListItem> BuildPersonSelectListItem(int? id = null)
-        {
-            List<SelectListItem> listItem = [];
-            AppServiceResult<IEnumerable<PersonDTO>> personsDTO = _personAppService.GetAll();
-            var persons = _mapper.Map<IList<PersonViewModel>>(personsDTO.Model);
+        //protected List<SelectListItem> BuildPersonSelectListItem(int? id = null)
+        //{
+        //    List<SelectListItem> listItem = [];
+        //    AppServiceResult<IEnumerable<PersonDTO>> personsDTO = _personAppService.GetAll();
+        //    var persons = _mapper.Map<IList<PersonViewModel>>(personsDTO.Model);
 
-            foreach (var item in persons)
-            {
-                listItem.Add(new SelectListItem(item.Name, item.Id.ToString(), item.Id == id));
-            }
+        //    foreach (var item in persons)
+        //    {
+        //        listItem.Add(new SelectListItem(item.Name, item.Id.ToString(), item.Id == id));
+        //    }
 
-            listItem.Insert(0, new SelectListItem("Selecione", null, id == null));
+        //    listItem.Insert(0, new SelectListItem("Selecione", null, id == null));
 
-            return listItem;
-        }
+        //    return listItem;
+        //}
     }
 }
