@@ -49,7 +49,7 @@ namespace ControleFinanceiro.Data.Implementation
             }
         }
 
-        public IEnumerable<ExpenseInstallment> GetAllExpenseInstallmentsByBill(int billId, bool onlyThirds)
+        public IEnumerable<ExpenseInstallment> GetAllExpenseInstallmentsByBill(int billId, int idPerson, int idCreditCard, DateTime? startDueDate, bool onlyThirds)
         {
             using (var conn = new SqlConnection(_context.GetConnectionString()))
             {

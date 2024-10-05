@@ -2,7 +2,6 @@
 using ControleFinanceiro.Application.Interfaces;
 using ControleFinanceiro.CrossCutting;
 using ControleFinanceiro.CrossCutting.DTO;
-using ControleFinanceiro.Models;
 using ControleFinanceiro.WebSite.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,22 +12,28 @@ namespace ControleFinanceiro.WebSite.Controllers
         private readonly IBillAppService _billAppService;
         private readonly IExpenseInstallmentAppService _expenseInstallmentAppService;
         private readonly IBaseAppService<PersonDTO> _personAppService;
+        private readonly IBaseAppService<CreditCardDTO> _creditCardAppService;
         private readonly IMapper _mapper;
 
         public BillController(IBillAppService billAppService, 
                               IExpenseInstallmentAppService expenseInstallmentAppService, 
                               IBaseAppService<PersonDTO> personAppService, 
+                              IBaseAppService<CreditCardDTO> creditCardAppService,
                               IMapper mapper)
         {
             _billAppService = billAppService;
             _expenseInstallmentAppService = expenseInstallmentAppService;
             _personAppService = personAppService;
+            _creditCardAppService = creditCardAppService;
             _mapper = mapper;
         }
 
         public IActionResult Index()
         {
-            AppServiceResult<IEnumerable<BillDTO>> result = _billAppService.GetAllBills(new ExpenseDTO() { IdPerson = 0, OnlyThirds = false });
+            DateTime initialDate = DateTime.Now.AddMonths(-2);
+            initialDate = new DateTime(initialDate.Year, initialDate.Month, 01);
+
+            AppServiceResult<IEnumerable<BillDTO>> result = _billAppService.GetAllBills(new BillDTO(initialDate));
 
             if (!result.Success) return RedirectToError(result.Message);
 
@@ -36,16 +41,17 @@ namespace ControleFinanceiro.WebSite.Controllers
 
             ViewBag.OnlyThirds = false;
             ViewBag.Persons = BuildPersonSelectListItem(_mapper, _personAppService, "Todos");
+            ViewBag.CreditCards = BuildCreditCardSelectListItem(_mapper, _creditCardAppService, "Todos");
+
+            model.FirstOrDefault().StartDueDate = initialDate;
 
             return View(model);
         }
 
         [HttpPost]
-        public IActionResult Index(bool onlyThirds, int idPerson)
+        public IActionResult Index(BillViewModel filter)
         {
-            //ExpenseViewModel expense = new ExpenseViewModel(); este objeto deve vir como parâmetro no método
-
-            ExpenseDTO dto = new() { IdPerson = idPerson, OnlyThirds = onlyThirds };
+            BillDTO dto = _mapper.Map<BillDTO>(filter);
 
             AppServiceResult<IEnumerable<BillDTO>> result = _billAppService.GetAllBills(dto);
 
@@ -53,17 +59,20 @@ namespace ControleFinanceiro.WebSite.Controllers
 
             var model = _mapper.Map<IList<BillViewModel>>(result.Model);
 
-            ViewBag.OnlyThirds = onlyThirds;
+            ViewBag.OnlyThirds = filter.OnlyThirds;
             ViewBag.Persons = BuildPersonSelectListItem(_mapper, _personAppService, "Todos");
+            ViewBag.CreditCards = BuildCreditCardSelectListItem(_mapper, _creditCardAppService, "Todos");
 
             return View("Index", model);
         }
 
         [HttpGet]
-        [Route("bill/list-items/{billId}/{onlyThirds}")]
-        public IActionResult GetExpenseInstallmentsByBill(int billId, bool onlyThirds)
+        [Route("bill/list-items")]
+        public IActionResult GetExpenseInstallmentsByBill(BillViewModel filter)
         {
-            AppServiceResult<IEnumerable<ExpenseInstallmentDTO>> result = _expenseInstallmentAppService.GetAllExpenseInstallmentsByBill(billId, onlyThirds);
+            BillDTO dto = _mapper.Map<BillDTO>(filter);
+
+            AppServiceResult<IEnumerable<ExpenseInstallmentDTO>> result = _expenseInstallmentAppService.GetAllExpenseInstallmentsByBill(dto);
 
             if (!result.Success) return RedirectToErrorJson(result.Message);
 

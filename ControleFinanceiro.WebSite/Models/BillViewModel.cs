@@ -21,7 +21,16 @@ namespace ControleFinanceiro.WebSite.Models
         public decimal Value { get; set; }
 
         [DisplayName("Cartão de Crédito")]
-        public int? IdCreditCard { get; set; }
+        public int IdCreditCard { get; set; }
+
+        [DisplayName("Pessoa")]
+        public int IdPerson { get; set; }
+
+        [DisplayName("A partir de:")]
+        [DataType(DataType.Date)]
+        public DateTime StartDueDate { get; set; }
+
+        public bool OnlyThirds { get; set; }
 
         public CreditCardViewModel? CreditCard { get; set; }
 

@@ -41,7 +41,7 @@ namespace ControleFinanceiro.WebSite.Controllers
 
         public IActionResult Create()
         {
-            ViewBag.CreditCards = BuildCreditCardSelectListItem(_mapper, _creditCardAppService);
+            ViewBag.CreditCards = BuildCreditCardSelectListItem(_mapper, _creditCardAppService, "Selecione");
             ViewBag.Persons = BuildPersonSelectListItem(_mapper, _personAppService, "Selecione");
             ViewBag.Status = new SelectList(Enums.GetDescriptions<Enums.ExpenseStatus>());
 
@@ -72,7 +72,7 @@ namespace ControleFinanceiro.WebSite.Controllers
 
             viewModel.ExpenseIntallments = installment;
 
-            ViewBag.CreditCards = BuildCreditCardSelectListItem(_mapper, _creditCardAppService, viewModel.IdCreditCard);
+            ViewBag.CreditCards = BuildCreditCardSelectListItem(_mapper, _creditCardAppService, "Selecione", viewModel.IdCreditCard);
             ViewBag.Persons = BuildPersonSelectListItem(_mapper, _personAppService, "Selecione", viewModel.IdPerson);
             ViewBag.Status = new SelectList(Enums.GetDescriptions<Enums.ExpenseStatus>(), viewModel.Status);
 

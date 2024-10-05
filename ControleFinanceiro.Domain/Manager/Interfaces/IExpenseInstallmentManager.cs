@@ -6,7 +6,7 @@ namespace ControleFinanceiro.Domain.Manager.Interfaces
     {
         IEnumerable<ExpenseInstallment> GetAll();
         IEnumerable<Expense> GetAllExpenses();
-        IEnumerable<ExpenseInstallment> GetAllExpenseInstallmentsByBill(int billId, bool onlyThirds);
+        IEnumerable<ExpenseInstallment> GetAllExpenseInstallmentsByBill(int billId, int idPerson, int idCreditCard, DateTime? startDueDate, bool onlyThirds);
         ExpenseInstallment GetById(int id);
         int Insert(ExpenseInstallment obj);
         void Update(ExpenseInstallment obj);

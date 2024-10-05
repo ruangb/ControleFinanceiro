@@ -83,17 +83,13 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-
         $.validator.methods.number = function (value, element, param) {
             debugger;
             var regex = /^-?(?:\d+|\d{1,3}(?:.\d{3})+)(?:(\,|.)\d+)?$/;
             return regex.test(value);
         }
 
-        debugger;
-
         $('#Amount').mask('0.000,00');
-
     });
 
     function isValidDate(dateString) {

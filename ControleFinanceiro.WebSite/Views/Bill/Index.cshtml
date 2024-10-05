@@ -13,17 +13,30 @@
 
 <form asp-action="Index">
     <div class="row py-5">
-        <div class="col-md-2 offset-2 align-content-center">
+        <div class="col-md-2 align-content-center align-self-end">
             @Html.DisplayName("Somente terceiros")
-            @Html.CheckBox("onlyThirds", htmlAttributes: new { @onchange = "this.form.submit()" })
-        </div>
-        <div class="col-md-1 text-end align-content-center">
-            @Html.DisplayName("Pessoa:")
+            @Html.CheckBox("onlyThirds", htmlAttributes: new { @onchange = "loadPersons()" })
         </div>
         <div class="col-md-3 align-content-center">
+            @Html.DisplayName("Pessoa:")
+@*         </div>
+        <div class="col-md-3 align-content-center"> *@
             @Html.DropDownList("IdPerson", ViewBag.Persons, null, htmlAttributes: new { @class = "form-control" })
         </div>
-        <div class="col-md-1 align-content-center">
+        <div class="col-md-3 align-content-center">
+            @Html.DisplayName("Cartão:")
+@*         </div>
+        <div class="col-md-3 align-content-center"> *@
+            @Html.DropDownList("IdCreditCard", ViewBag.CreditCards, null, htmlAttributes: new { @class = "form-control" })
+        </div>
+        <div class="col-md-2 align-content-center">
+            @Html.DisplayName("A partir de:")
+@*         </div>
+        <div class="col-md-3 align-content-center"> *@
+            <input asp-for="@Model.FirstOrDefault().StartDueDate" class="form-control" />
+
+        </div>
+        <div class="col-md-1 align-content-center align-self-end">
             <input type="submit" value="Filtrar" class="btn btn-success btn" />
         </div>
     </div>
@@ -99,9 +112,18 @@
             $("#btn-" + id).html("- Detalhes");
         }
         else{
+            debugger;
+            var param = {};
+            param.IdBill = id;
+            param.OnlyThirds = document.getElementById("onlyThirds").checked;
+            param.IdPerson = $("#IdPerson").val();
+            param.IdCreditCard = $("#IdCreditCard").val();
+            param.StartDueDate = $("#StartDueDate").val();
+
             $.ajax({
-                url: '@Url.Content("~/bill/list-items")/' + id + '/' + document.getElementById("onlyThirds").checked,
+                url: '@Url.Content("~/bill/list-items")'/*  + id + '/' + document.getElementById("onlyThirds").checked */,
                 type: "GET",
+                data: param,
                 success: function (result) {
                     debugger;
                     if (result.success) {
@@ -119,5 +141,28 @@
                 }
             });
         }
+    }
+
+    function loadPersons(){
+        $.ajax({
+            url: '@Url.Content("~/bill/load-persons")',
+            type: "GET",
+            data: param,
+            success: function (result) {
+                debugger;
+                if (result.success) {
+                    $("#tdDetails-" + id).append(result.content);
+                    $("#trDetails-" + id).toggle();
+                    $("#btn-" + id).html("- Detalhes");
+                    alreadyLoadedBill.push(id);
+                }
+                else {
+                    alert(result.message);
+                }
+            },
+            error: function (e) {
+                alert(e.Message);
+            }
+        });
     }
 </script>

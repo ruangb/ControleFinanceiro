@@ -23,9 +23,9 @@ namespace ControleFinanceiro.Domain.Manager.Implementation
             return _expenseInstallmentRepository.GetAllExpenses();
         }
 
-        public IEnumerable<ExpenseInstallment> GetAllExpenseInstallmentsByBill(int billId, bool onlyThirds)
+        public IEnumerable<ExpenseInstallment> GetAllExpenseInstallmentsByBill(int billId, int idPerson, int idCreditCard, DateTime? startDueDate, bool onlyThirds)
         {
-            return _expenseInstallmentRepository.GetAllExpenseInstallmentsByBill(billId, onlyThirds);
+            return _expenseInstallmentRepository.GetAllExpenseInstallmentsByBill(billId, idPerson, idCreditCard, startDueDate, onlyThirds);
         }
 
         public ExpenseInstallment GetById(int id)

@@ -8,6 +8,7 @@ using System.Text.Json.Nodes;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using AutoMapper;
 using ControleFinanceiro.Application.Interfaces;
+using Microsoft.CodeAnalysis.Options;
 
 namespace ControleFinanceiro.WebSite.Controllers
 {
@@ -34,7 +35,7 @@ namespace ControleFinanceiro.WebSite.Controllers
             return Json(new JsonResultViewModel(false, message));
         }
 
-        protected List<SelectListItem> BuildCreditCardSelectListItem(IMapper mapper, IBaseAppService<CreditCardDTO> creditCardAppService, int? id = null)
+        protected List<SelectListItem> BuildCreditCardSelectListItem(IMapper mapper, IBaseAppService<CreditCardDTO> creditCardAppService, string optionText, int? id = null)
         {
             List<SelectListItem> listItem = [];
 
@@ -46,7 +47,7 @@ namespace ControleFinanceiro.WebSite.Controllers
                 listItem.Add(new SelectListItem(item.Name, item.Id.ToString(), item.Id == id));
             }
 
-            listItem.Insert(0, new SelectListItem("Selecione", null, id == null));
+            listItem.Insert(0, new SelectListItem(optionText, null, id == null));
             return listItem;
         }
 

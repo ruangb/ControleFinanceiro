@@ -18,9 +18,9 @@ namespace ControleFinanceiro.Domain.Manager.Implementation
             return _BillRepository.GetAll();
         }
 
-        public IEnumerable<Bill> GetAllBills(int idPerson, bool onlyThirds)
+        public IEnumerable<Bill> GetAllBills(int idPerson, int idCreditCard, DateTime? startDueDate, bool onlyThirds)
         {
-            return _BillRepository.GetAllBills(idPerson, onlyThirds);
+            return _BillRepository.GetAllBills(idPerson, idCreditCard, startDueDate, onlyThirds);
         }
 
         public Bill GetById(int id)
