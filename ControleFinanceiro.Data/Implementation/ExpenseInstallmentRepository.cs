@@ -55,15 +55,23 @@ namespace ControleFinanceiro.Data.Implementation
             {
                 conn.Open();
 
+                string filter = string.Empty;
+
+                if (idPerson > 0)
+                    filter += $" AND p.Id = {idPerson} ";
+                if (idCreditCard > 0)
+                    filter += $" AND c.Id = {idCreditCard} ";
+                if (startDueDate != null)
+                    filter += $" AND b.DueDate >= '{startDueDate.GetValueOrDefault():yyyy-MM-dd}' ";
+                if (onlyThirds)
+                    filter += $" AND p.Main = 0 ";
+
                 var sql = @$"SELECT ei.*, e.*, c.Name, p.Name FROM ExpenseInstallment (NOLOCK) ei
                              INNER JOIN Bill (NOLOCK) b ON ei.IdBill = b.Id
                              INNER JOIN CreditCard (NOLOCK) c ON b.IdCreditCard = c.Id
                              INNER JOIN Expense (NOLOCK) e ON ei.IdExpense = e.Id
                              INNER JOIN Person (NOLOCK) p ON e.IdPerson = p.Id
-                             WHERE b.Id = {billId}";
-
-                if (onlyThirds)
-                    sql += " AND p.Main = 0";
+                             WHERE b.Id = {billId} {filter}";
 
                 var expenseInstallments = conn.Query<ExpenseInstallment, Expense, CreditCard, Person, ExpenseInstallment>(sql, (expenseInsallment, expense, creditCard, person) => {
                     expenseInsallment.Expense = expense;

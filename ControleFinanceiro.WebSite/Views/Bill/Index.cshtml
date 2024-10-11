@@ -114,14 +114,14 @@
         else{
             debugger;
             var param = {};
-            param.IdBill = id;
+            param.Id = id;
             param.OnlyThirds = document.getElementById("onlyThirds").checked;
             param.IdPerson = $("#IdPerson").val();
             param.IdCreditCard = $("#IdCreditCard").val();
             param.StartDueDate = $("#StartDueDate").val();
 
             $.ajax({
-                url: '@Url.Content("~/bill/list-items")'/*  + id + '/' + document.getElementById("onlyThirds").checked */,
+                url: '@Url.Content("~/bill/list-items")',
                 type: "GET",
                 data: param,
                 success: function (result) {

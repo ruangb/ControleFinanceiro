@@ -46,7 +46,7 @@ namespace ControleFinanceiro.Data.Implementation
                     filterCard = $" {(!string.IsNullOrEmpty(filterPerson) ? "AND" : "WHERE")} c.Id = {idCreditCard} ";
 
                 if (startDueDate != null)
-                    filterDate = $" {(!string.IsNullOrEmpty(filterPerson) || !string.IsNullOrEmpty(filterCard) ? "AND" : "WHERE")} b.DueDate >= {startDueDate}";
+                    filterDate = $" {(!string.IsNullOrEmpty(filterPerson) || !string.IsNullOrEmpty(filterCard) ? "AND" : "WHERE")} b.DueDate >= '{startDueDate.GetValueOrDefault():yyyy-MM-dd}'";
 
                 var sql = @$"SELECT b.Id, b.IdCreditCard, b.DueDate, SUM(ei.Value) Value, c.[Name] FROM ExpenseInstallment (NOLOCK) ei
                              INNER JOIN Bill (NOLOCK) b ON ei.IdBill = b.Id
