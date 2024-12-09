@@ -11,6 +11,7 @@ GO
 -- Description:     Grava ou atualiza uma parcela da Despesa amarrando-a a uma Fatura, que, se não existente, também será criada nesta proc
 -- Modifications: DD/MM/YYYY      |     Author    |    Description
 --				  24/09/2024		Ruan G.B.		Ajuste para garantir o lançamento de uma parcela por fatura, quando dentro de um loop
+--				  09/12/2024		Ruan G.B.		Correção na obtenção de Fatura existente (estava faltando passar o IdCreditCard no Where)
 -- ================================================================
 CREATE PROCEDURE [dbo].[PRC_SAVE_EXPENSE_INSTALLMENT]
         @N_ID             INT 
@@ -37,14 +38,29 @@ BEGIN
 		SET @CreditCardDueDate = (SELECT DATEADD(MONTH, 1, @CreditCardDueDate))
 	END
 
-	DECLARE @IdBill INT = (SELECT Id FROM Bill (NOLOCK) WHERE DueDate = @CreditCardDueDate);
+	DECLARE @IdBill INT = (SELECT Id FROM Bill (NOLOCK) WHERE DueDate = @CreditCardDueDate AND IdCreditCard = @N_ID_CREDIT_CARD);
 	
 	IF (@IdBill IS NULL)
 	BEGIN 	
 		INSERT INTO Bill (IdCreditCard, DueDate)
 		VALUES (@N_ID_CREDIT_CARD, @CreditCardDueDate)
 
-		SET @IdBill = (SELECT Id FROM Bill (NOLOCK) WHERE DueDate = @CreditCardDueDate);
+		SET @IdBill = (SELECT Id FROM Bill (NOLOCK) WHERE DueDate = @CreditCardDueDate AND IdCreditCard = @N_ID_CREDIT_CARD);
+	END
+
+	-- Se já existir uma parcela desta despesa na fatura em questão, jogar uma fatura para frente
+	IF ((SELECT COUNT(Id) FROM ExpenseInstallment WHERE IdBill = @IdBill AND IdExpense = @N_ID_EXPENSE) > 0)
+	BEGIN 
+		SET @CreditCardDueDate = DATEADD(MONTH, 1, @CreditCardDueDate);
+		SET @IdBill = (SELECT Id FROM Bill (NOLOCK) WHERE DueDate = @CreditCardDueDate AND IdCreditCard = @N_ID_CREDIT_CARD);
+
+		IF (@IdBill IS NULL)
+		BEGIN 	
+			INSERT INTO Bill (IdCreditCard, DueDate)
+			VALUES (@N_ID_CREDIT_CARD, @CreditCardDueDate)
+
+			SET @IdBill = (SELECT Id FROM Bill (NOLOCK) WHERE DueDate = @CreditCardDueDate AND IdCreditCard = @N_ID_CREDIT_CARD);
+		END
 	END
 
 	IF (@N_ID = 0)
